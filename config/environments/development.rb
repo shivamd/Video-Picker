@@ -4,11 +4,6 @@ Videopicker::Application.configure do
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  api_keys = YAML.load_file(Rails.root.join('config','keys.yml'))
-  ENV["VIMEO_CONSUMER_KEY"] = api_keys["VIMEO_CONSUMER_KEY"]
-  ENV["VIMEO_CONSUMER_SECRET"] = api_keys["VIMEO_CONSUMER_SECRET"]
-  ENV["VIMEO_ACCESS_TOKEN"] = api_keys["VIMEO_ACCESS_TOKEN"]
-  ENV["VIMEO_ACCESS_SECRET"] = api_keys["VIMEO_ACCESS_SECRET"]
   config.cache_classes = false
 
   # Do not eager load code on boot.

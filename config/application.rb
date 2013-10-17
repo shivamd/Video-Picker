@@ -8,6 +8,12 @@ Bundler.require(:default, Rails.env)
 
 module Videopicker
   class Application < Rails::Application
+
+    api_keys = YAML.load_file(Rails.root.join('config','keys.yml'))
+    ENV["VIMEO_CONSUMER_KEY"] = api_keys["VIMEO_CONSUMER_KEY"]
+    ENV["VIMEO_CONSUMER_SECRET"] = api_keys["VIMEO_CONSUMER_SECRET"]
+    ENV["VIMEO_ACCESS_TOKEN"] = api_keys["VIMEO_ACCESS_TOKEN"]
+    ENV["VIMEO_ACCESS_SECRET"] = api_keys["VIMEO_ACCESS_SECRET"]
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
