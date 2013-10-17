@@ -16,4 +16,18 @@ module SearchHelper
      }
   end
 
+  def format_vimeo_response(video)
+    {
+      image: video["thumbnails"]["thumbnail"][1]["_content"],
+      duration: video["duration"],
+      title: video["title"],
+      user_name: video["owner"]["display_name"],
+      date: time_ago_in_words(video["upload_date"]),
+      view_count: video["number_of_plays"],
+      description: video["description"],
+      id: video["id"],
+      url: video["urls"]["url"][0]["_content"]
+    }
+  end
+
 end
