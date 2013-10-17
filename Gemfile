@@ -25,3 +25,6 @@ group :test, :development do
   gem 'rspec'
   gem 'debugger'
 end
+
+#Api's for video search
+gem 'youtube_it'
