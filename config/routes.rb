@@ -5,6 +5,7 @@ Videopicker::Application.routes.draw do
   namespace :search do 
     get "youtube"
     get "vimeo"
+    get "dailymotion"
   end
 
   # You can have the root of your site routed with "root"
