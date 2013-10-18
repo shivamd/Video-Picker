@@ -23,6 +23,8 @@ group :doc do
 end
 
 group :test, :development do
-  gem 'rspec'
+  gem 'rspec-rails'
   gem 'debugger'
+  gem 'jasmine-rails'
+  gem 'sinon-rails'
 end
