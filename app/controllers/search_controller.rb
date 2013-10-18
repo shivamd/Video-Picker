@@ -22,4 +22,14 @@ class SearchController < ApplicationController
     end
   end
 
+  def dailymotion
+    response = get_dailymotion_videos(params[:query])
+    if response && response["list"].present?
+      videos = response["list"].map{ |video| format_dailymotion_response(video) }
+      render json: videos, status: 200, query: params[:query]
+    else
+      render json: params[:query], status: 404
+    end
+  end
+
 end
