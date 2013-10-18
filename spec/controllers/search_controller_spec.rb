@@ -45,4 +45,26 @@ describe SearchController do
 		end
 	end
 
+  describe "#dailymotion" do 
+    it "should return a 200" do 
+      get :dailymotion, :query => "test"
+      expect(response.status).to eq(200)
+    end
+
+		it "should not make a search if query is blank" do
+			get :dailymotion,  :query => ''
+			expect(response.status).to eq(404)
+		end
+
+		it "should 404 if there are no results" do
+			get :dailymotion,  :query => 'uaohsuhsdf'
+			expect(response.status).to eq(404)
+		end
+
+		it "should return JSON data" do
+			get :dailymotion,  :query => 'test'
+			response.header['Content-Type'].should include 'application/json'
+		end
+  end
+
 end
