@@ -1,28 +1,22 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+Steps to get started:
 
 * Ruby version
+The App is built on ruby 2.0 and rails 4, so you want to make sure you're runnig ruby 2.0
 
-* System dependencies
+```shell
+rvm use 2.0.0
+```
+To update rails, just run the following when you're good with ruby 2.0.0
+```shell
+bundle install
+```
 
-* Configuration
+SSL certificate: make sure they are not too old:
+```shell
+rvm osx-ssl-certs status all
+rvm osx-ssl-certs update all
+```
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+For the keys.yml file, contact the admin.
