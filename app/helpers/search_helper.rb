@@ -61,4 +61,34 @@ module SearchHelper
     }
   end
 
+  def get_popular_vine_videos(query)
+    if query.present?
+      agent = Mechanize.new
+      page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
+      page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    end
+  end
+
+  def format_vine_response(video)
+    agent = Mechanize.new 
+    page = agent.get("http://" + video)
+    source = page.search('video').select { |i| i.name == "video" }[0].children.select{ |i| i.name == "source" }.first.attributes['src'].value
+    thumbnail = page.search('meta[property="og:image"]').first.attributes["content"].value
+    title = page.search('meta[property="og:title"]').first.attributes["content"].value
+    user_name = page.search("div h2").inner_text
+
+    {
+      image: thumbnail,
+      duration: nil, 
+      title: title,
+      user_name: user_name,
+      date: nil,
+      view_count: nil,
+      description: nil,
+      id: video,
+      url: source
+    }
+
+  end
+
 end
