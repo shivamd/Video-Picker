@@ -30,7 +30,7 @@ module SearchHelper
   def format_vimeo_response(video)
     {
       image: video["thumbnails"]["thumbnail"][1]["_content"],
-      duration: video["duration"],
+      duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
       title: video["title"],
       user_name: video["owner"]["display_name"],
       date: time_ago_in_words(video["upload_date"]),
@@ -52,7 +52,7 @@ module SearchHelper
   def format_dailymotion_response(video)
     {
       image: video["thumbnail_240_url"],
-      duration: video["duration"],
+      duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
       title: video["title"],
       user_name: video["owner"],
       date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time
@@ -74,9 +74,9 @@ module SearchHelper
 
   def get_recent_vine_videos(query)
     if query.present?
-    client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
-    videos = client.search("vine.co #{query}", count: 25)[:statuses]
-    videos.map{ |video| video[:urls][0][:expanded_url].gsub("https://", "") }
+      client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
+      videos = client.search("vine.co #{query}", count: 25)[:statuses]
+      videos.map{ |video| video[:urls][0][:expanded_url].gsub("https://", "") }
     end
   end
 
