@@ -102,3 +102,55 @@
         &:focus
           outline: 0px !important
           -webkit-appearance: none
+
+    .results
+      height: 80%
+      max-height: 80%
+      width: 100%
+      text-align: center
+      overflow-y: scroll
+      .video
+        display: inline-block
+        vertical-align: middle
+        height: 100px
+        width: 180px
+        margin: 5px
+        cursor: pointer
+        img
+          max-width: 100%
+          max-height: 100%
+          height: auto
+          width: auto
+          border: 1px solid lighten($dim-text, 20)
+          z-index: -1
+          +transition(all .3s ease)
+          +box-shadow(1px 1px 3px rgba(0, 0, 0, 0.1))
+        &:after
+          margin-left: -30px
+          +grayfilter(100%)
+          +transition(all .3s ease)
+        &:hover:after
+          +grayfilter(0%)
+        &.source-youtube
+          &:after
+            content: "\f167"
+          &:hover:after
+            color: $youtube-color
+        &.source-instagram
+          &:after
+            content: "\f16d"
+          &:hover:after
+            color: $instagram-color
+        &.source-vimeo
+          &:after
+            content: $vimeo-logo
+        &.source-dailymotion
+          &:after
+            content: $dailymotion-logo
+        &.source-vine
+          &:after
+            content: $vine-logo
+        &.source-qwiki
+          &:after
+            content: $qwiki-logo
+
