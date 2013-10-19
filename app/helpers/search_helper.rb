@@ -22,7 +22,7 @@ module SearchHelper
   end
 
   def get_vimeo_videos(query)
-    vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
+    vimeo = Vimeo::Advanced::Video.new(ENV["TWITTER_CONSUMER_KEY"],ENV["TWITTER_CONSUMER_SECRET"],token: ENV["TWITTER_ACCESS_TOKEN"], secret: ENV["TWITTER_ACCESS_SECRET"])
     response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"}) if query.present?
   end
 
@@ -66,6 +66,14 @@ module SearchHelper
       agent = Mechanize.new
       page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
       page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    end
+  end
+
+  def get_recent_vine_videos(query)
+    if query.present? 
+    client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
+    videos = client.search("vine.co #{query}", count: 25)[:statuses]
+    videos.map{ |video| video[:urls][0][:expanded_url].gsub("https://", "") }
     end
   end
 
