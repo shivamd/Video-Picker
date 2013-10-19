@@ -2,6 +2,14 @@ Videopicker::Application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  namespace :search do 
+    get "youtube"
+    get "vimeo"
+    get "dailymotion"
+    get "popular_vines"
+    get "recent_vines"
+  end
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

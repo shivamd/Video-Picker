@@ -22,6 +22,14 @@ group :doc do
 end
 
 group :test, :development do
-  gem 'rspec'
+  gem 'rspec-rails'
   gem 'debugger'
 end
+
+#Api's for video search
+gem 'youtube_it'
+gem 'vimeo'
+gem 'twitter'
+
+#Scraping tools
+gem 'mechanize'
