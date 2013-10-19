@@ -28,3 +28,11 @@ group :test, :development do
   gem 'jasmine-rails'
   gem 'sinon-rails'
 end
+
+#Api's for video search
+gem 'youtube_it'
+gem 'vimeo'
+gem 'twitter'
+
+#Scraping tools
+gem 'mechanize'
