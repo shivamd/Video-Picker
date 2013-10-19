@@ -11,6 +11,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
   events:
     "click .source" : "manageSource"
     "dblclick .source" : "isolateSource"
+    "click input[type='submit']" : "launchSearch"
 
   render: =>
     $(@el).html(@template({@sources}))
@@ -18,12 +19,13 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     return @
 
   manageSource: (e) ->
-    if $(e.target).hasClass "active"
-      $(e.target).removeClass "active"
-      $(e.target).addClass "inactive"
+    filter = $(e.target)
+    if filter.hasClass "active"
+      filter.removeClass "active"
+      filter.addClass "inactive"
     else
-      $(e.target).removeClass "inactive"
-      $(e.target).addClass "active"
+      filter.removeClass "inactive"
+      filter.addClass "active"
 
   isolateSource: (e) ->
     $("li").removeClass "active"
@@ -35,3 +37,27 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     else if document.selection
       document.selection.empty()
 
+  launchSearch: (e) ->
+    e.preventDefault()
+    query = $("input[name='search']").val()
+    query_sources = []
+    _.each($("li"), (filter) ->
+      if $(filter).hasClass("active")
+        query_sources.push $(filter).attr("data-name")
+    )
+    @_getAllVideos(query, query_sources)
+
+  _getAllVideos: (query, query_sources) ->
+    self = @
+    _.each(query_sources, (source) ->
+      self._getVideos(query, source)
+    )
+
+  _getVideos: (query, source) ->
+    $.ajax
+      type: "get"
+      url: "/search/#{source}"
+      dataType: 'json'
+      data: {query: query}
+      success: (response) ->
+        console.log(response)

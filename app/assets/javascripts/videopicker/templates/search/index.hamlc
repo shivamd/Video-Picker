@@ -3,7 +3,7 @@
     %legend Filters
     %ul
       -_.each(@sources, (source) ->
-        %li.source.active{class: source}= _(source).capitalize()
+        %li.source.active{class: source, data-name: source}= _(source).capitalize()
       - )
 
 %form
