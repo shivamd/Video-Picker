@@ -1,5 +1,8 @@
+@import "variables"
+@import "mixins"
+
 html
-  background: url(asset_path('cross.jpg', images))
+  background: $background
 
 .container
   vertical-align: center
@@ -9,3 +12,21 @@ html
   font-size: 14px
   font-weight: 300
   color: #222
+
+fieldset
+  border-top: 1px solid lighten($dim-text, 20)
+  border-right: none
+  border-bottom: none
+  border-left: none
+  margin: 10px 0 20px 0
+  padding: 5px 0
+  legend
+    color: darken($dim-text, 5)
+    padding: 0 10px
+    font-size: 18px
+    +text-shadow($white-a7 1px 1px 0)
+
+.inactive
+  color: darken($dim-text, 5)
+  background: $white-a5
+  +text-shadow($white-a3 1px 1px 0)

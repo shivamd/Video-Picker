@@ -1,18 +1,93 @@
-form
+@import "variables"
+@import "mixins"
+
+.search-box
   margin: auto
   width: 600px
   height: 400px
-  border: 1px dashed #efcccc
-  border-radius: 5px
+  border:  1px solid lighten($dim-text, 20)
   text-align: center
-  input
-    margin-top: 20%
-    padding: 10px
-    display: inline-block
-    vertical-align: middle
-    border: 1px solid #efcccc
-    box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px inset
-    width: 200px
-    &:focus
-      outline: 0px !important
-      -webkit-appearance: none
+  .sources
+    width: 25%
+    float: left
+    height: 100%
+    background: #f3f3f3
+    +box-shadow(rgba(0, 0, 0, 0.1) 0 0 10px inset)
+    ul
+      width: 100%
+      height: 100%
+      margin: 0
+      padding: 10px 0
+      list-style: none
+      text-align: left
+      li
+        padding: 10px
+        border-bottom: 1px solid lighten($dim-text, 20)
+        &.active
+        &:hover
+          cursor: pointer
+        &.youtube,
+        &.vimeo,
+        &.vine,
+        &.dailymotion,
+        &.instagram,
+        &.qwiki
+          font-family: FontAwesome
+          +grayfilter(100%)
+          +transition(all .3s ease)
+          &:hover
+            +grayfilter(0%)
+          &:before
+            font-size: 25px
+            width: 25px
+            margin-right: 5px
+            display: inline-block
+            vertical-align: middle
+            color: gray
+            +transition(all .3s ease)
+        &.youtube
+          &:before
+            content: "\f167"
+          &:hover:before
+            color: $youtube-color
+        &.instagram
+          &:before
+            content: "\f16d"
+          &:hover:before
+            color: $instagram-color
+        &.vimeo
+          &:before
+            content: $vimeo-logo
+        &.dailymotion
+          &:before
+            content: $dailymotion-logo
+        &.vine
+          &:before
+            content: $vine-logo
+        &.qwiki
+          &:before
+            content: $qwiki-logo
+
+  form
+    width: 75%
+    float: left
+    height: 20%
+    padding: 20px 0
+    input
+      padding: 10px
+      display: inline-block
+      vertical-align: middle
+      border:  1px solid lighten($dim-text, 20)
+      +box-shadow(rgba(0, 0, 0, 0.2) 0 0 4px inset)
+      width: 200px
+      background: #f3f3f3
+      +transition(all .3s ease)
+      &[type="submit"]
+        background: none
+        +box-shadow(rgba(0, 0, 0, 0.05) 0 0 4px inset)
+        cursor: pointer
+        &:hover
+          +box-shadow(rgba(0, 0, 0, 0.2) 0 0 4px inset)
+      &:focus
+        outline: 0px !important
+        -webkit-appearance: none
