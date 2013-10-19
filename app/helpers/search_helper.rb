@@ -22,7 +22,7 @@ module SearchHelper
   end
 
   def get_vimeo_videos(query)
-    vimeo = Vimeo::Advanced::Video.new(ENV["TWITTER_CONSUMER_KEY"],ENV["TWITTER_CONSUMER_SECRET"],token: ENV["TWITTER_ACCESS_TOKEN"], secret: ENV["TWITTER_ACCESS_SECRET"])
+    vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
     response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"}) if query.present?
   end
 
