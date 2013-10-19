@@ -67,4 +67,26 @@ describe SearchController do
 		end
   end
 
+  describe "#popular_vines" do 
+    it "should return a 200" do 
+      get :popular_vines, :query => "test"
+      expect(response.status).to eq(200)
+    end
+
+		it "should not make a search if query is blank" do
+			get :popular_vines,  :query => ''
+			expect(response.status).to eq(404)
+		end
+
+		it "should 404 if there are no results" do
+			get :popular_vines,  :query => 'uaohsuhsdf'
+			expect(response.status).to eq(404)
+		end
+
+		it "should return JSON data" do
+			get :popular_vines,  :query => 'test'
+			response.header['Content-Type'].should include 'application/json'
+		end
+  end
+
 end
