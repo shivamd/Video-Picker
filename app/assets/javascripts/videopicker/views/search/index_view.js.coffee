@@ -19,7 +19,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     return @
 
   manageSource: (e) ->
-    filter = $(e.target)
+    filter = $(e.target).closest("li")
     if filter.hasClass "active"
       filter.removeClass "active"
       filter.addClass "inactive"
