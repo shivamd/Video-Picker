@@ -50,6 +50,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
   _getAllVideos: (query, query_sources) ->
     self = @
     self.videos = new Videopicker.Collections.VideosCollection()
+    self.$(".results").html("")
     _.each(query_sources, (source) ->
       self._getVideos(query, source)
     , self)
@@ -57,7 +58,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
   _getVideos: (query, source) ->
     self = @
     query_source = if source == "vine"
-      "recent_vines"
+      "popular_vines"
     else
       source
     $.ajax
