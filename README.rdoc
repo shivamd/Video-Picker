@@ -5,16 +5,16 @@ Steps to get started:
 * Ruby version
 The App is built on ruby 2.0 and rails 4, so you want to make sure you're runnig ruby 2.0
 
-```shell
+```
 rvm use 2.0.0
 ```
 To update rails, just run the following when you're good with ruby 2.0.0
-```shell
+```
 bundle install
 ```
 
 SSL certificate: make sure they are not too old:
-```shell
+```
 rvm osx-ssl-certs status all
 rvm osx-ssl-certs update all
 ```
