@@ -15,8 +15,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   render: =>
     $(@el).html(@template({@sources}))
-
-    return @
+    @
 
   manageSource: (e) ->
     filter = $(e.target).closest("li")
