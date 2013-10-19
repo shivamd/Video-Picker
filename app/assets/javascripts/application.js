@@ -19,5 +19,6 @@
 //= require underscore
 //= require backbone
 //= require videopicker/videopicker
+//= require mixins
 //= require_tree .
 //= require turbolinks

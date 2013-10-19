@@ -1,2 +1,12 @@
+.sources
+  %fieldset
+    %legend Filters
+    %ul
+      -_.each(@sources, (source) ->
+        %li.source.active{class: source}= _(source).capitalize()
+      - )
+
 %form
-  %input{name: "search", placeholder: "What up sweety?", autofocus: true}
+  %input{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
+  %input{type: "submit", value: "Search!"}
+
