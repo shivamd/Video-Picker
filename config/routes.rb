@@ -6,6 +6,7 @@ Videopicker::Application.routes.draw do
     get "youtube"
     get "vimeo"
     get "dailymotion"
+    get "popular_vines"
   end
 
   # You can have the root of your site routed with "root"
