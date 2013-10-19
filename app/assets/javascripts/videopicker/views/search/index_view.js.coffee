@@ -28,8 +28,8 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       filter.addClass "active"
 
   isolateSource: (e) ->
-    $("li").removeClass "active"
-    $("li").addClass "inactive"
+    @$("li").removeClass "active"
+    @$("li").addClass "inactive"
     $(e.target).removeClass "inactive"
     $(e.target).addClass "active"
     if window.getSelection
@@ -41,7 +41,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     e.preventDefault()
     query = $("input[name='search']").val()
     query_sources = []
-    _.each($("li"), (filter) ->
+    _.each(@$("li"), (filter) ->
       if $(filter).hasClass("active")
         query_sources.push $(filter).attr("data-name")
     )
@@ -49,11 +49,13 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   _getAllVideos: (query, query_sources) ->
     self = @
+    self.videos = new Videopicker.Collections.VideosCollection()
     _.each(query_sources, (source) ->
       self._getVideos(query, source)
-    )
+    , self)
 
   _getVideos: (query, source) ->
+    self = @
     query_source = if source == "vine"
       "recent_vines"
     else
@@ -63,5 +65,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       url: "/search/#{query_source}"
       dataType: 'json'
       data: {query: query}
-      success: (response) ->
-        console.log(response)
+      success: (response, data) ->
+        _.each(response, (video) ->
+          self.video = new Videopicker.Models.Video(video)
+          self.videos.add(self.video)
+          view = new Videopicker.Views.Search.VideoView({model: self.video})
+          self.$(".results").append(view.render().el)
+        , self)
