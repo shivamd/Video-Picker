@@ -3,10 +3,13 @@
     %legend Filters
     %ul
       -_.each(@sources, (source) ->
-        %li.source.active{class: source, data-name: source}= _(source).capitalize()
+        %li.source.active{class: source, data-name: source}
+          %p= _(source).capitalize()
       - )
 
-%form
-  %input{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
-  %input{type: "submit", value: "Search!"}
+.search
+  %form
+    %input{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
+    %input{type: "submit", value: "Search!"}
 
+  .results
