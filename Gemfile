@@ -29,3 +29,6 @@ end
 #Api's for video search
 gem 'youtube_it'
 gem 'vimeo'
+
+#Scraping tools
+gem 'mechanize'
