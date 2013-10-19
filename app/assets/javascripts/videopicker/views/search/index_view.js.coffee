@@ -54,9 +54,13 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     )
 
   _getVideos: (query, source) ->
+    query_source = if source == "vine"
+      "recent_vines"
+    else
+      source
     $.ajax
       type: "get"
-      url: "/search/#{source}"
+      url: "/search/#{query_source}"
       dataType: 'json'
       data: {query: query}
       success: (response) ->
