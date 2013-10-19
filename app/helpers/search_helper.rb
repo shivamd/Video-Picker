@@ -17,7 +17,8 @@ module SearchHelper
       view_count: number_with_delimiter(video.view_count, :delimiter => ','),
       description: video.description,
       id: video.video_id.match(/video:(.+)/)[1],
-      url: video.player_url
+      url: video.player_url,
+      source: "youtube"
      }
   end
 
@@ -36,7 +37,8 @@ module SearchHelper
       view_count: video["number_of_plays"],
       description: video["description"],
       id: video["id"],
-      url: video["urls"]["url"][0]["_content"]
+      url: video["urls"]["url"][0]["_content"],
+      source: "vimeo"
     }
   end
 
@@ -53,11 +55,12 @@ module SearchHelper
       duration: video["duration"],
       title: video["title"],
       user_name: video["owner"],
-      date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time 
+      date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time
       view_count: video["views_total"],
       description: video["description"],
       id: video["id"],
-      url: video["url"]
+      url: video["url"],
+      source: "dailymotion"
     }
   end
 
@@ -70,7 +73,7 @@ module SearchHelper
   end
 
   def get_recent_vine_videos(query)
-    if query.present? 
+    if query.present?
     client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
     videos = client.search("vine.co #{query}", count: 25)[:statuses]
     videos.map{ |video| video[:urls][0][:expanded_url].gsub("https://", "") }
@@ -78,7 +81,7 @@ module SearchHelper
   end
 
   def format_vine_response(video)
-    agent = Mechanize.new 
+    agent = Mechanize.new
     page = agent.get("http://" + video)
     source = page.search('video').select { |i| i.name == "video" }[0].children.select{ |i| i.name == "source" }.first.attributes['src'].value
     thumbnail = page.search('meta[property="og:image"]').first.attributes["content"].value
@@ -87,14 +90,15 @@ module SearchHelper
 
     {
       image: thumbnail,
-      duration: nil, 
+      duration: nil,
       title: title,
       user_name: user_name,
       date: nil,
       view_count: nil,
       description: nil,
       id: video,
-      url: source
+      url: source,
+      source: "vine"
     }
 
   end

@@ -1,0 +1,240 @@
+=grayfilter($value)
+  filter: grayscale($value)
+  -webkit-filter: grayscale($value)  /* For Webkit browsers */
+  @if $value == 100%
+    filter: gray  /* For IE 6 - 9 */
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale") /* Firefox 10+, Firefox on Android */
+  @else
+    filter: none
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0\'/></filter></svg>#grayscale")
+
+=animation($value)
+  -moz-animation: $value
+  -webkit-animation: $value
+  animation: $value
+
+=bg_size($value)
+  -moz-background-size: $value
+  -webkit-background-size: $value
+  background-size: $value
+
+=bg_gradient($color1, $color2, $pos1: 0%, $pos2: 100%, $type: linear, $extra: "")
+  background: $color1 /* Old browsers */
+  background: -moz-linear-gradient(top, $color1 $pos1, $color2 $pos2) #{$extra}
+  background: -webkit-gradient($type, left top, left bottom, color-stop($pos1,$color1), color-stop($pos2,$color2)) #{$extra}
+  background: -webkit-linear-gradient(top, $color1 $pos1, $color2 $pos2) #{$extra}
+  background: -o-linear-gradient(top, $color1 $pos1, $color2 $pos2) #{$extra}
+  background: -ms-linear-gradient(top, $color1 $pos1, $color2 $pos2) #{$extra}
+  background: linear-gradient(to bottom, $color1 $pos1, $color2 $pos2) #{$extra}
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$color1}, endColorstr=#{$color2})"
+
+=bg_trigradient($color1, $pos1, $color2, $pos2, $color3: '', $pos3: '', $type: linear, $extra: "")
+  background: $color1 /* Old browsers */
+  background: -moz-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}) #{$extra}
+  background: -webkit-gradient($type, left top, left bottom, color-stop($pos1,$color1), color-stop($pos2,$color2), color-stop(#{$color3}, #{$pos3})) #{$extra}
+  background: -webkit-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}) #{$extra}
+  background: -o-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}) #{$extra}
+  background: -ms-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}) #{$extra}
+  background: linear-gradient(to bottom, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}) #{$extra}
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$color1}, endColorstr=#{$color2})"
+
+=bg_multigradient($color1, $pos1, $color2, $pos2, $color3: '', $pos3: '', $color4: '', $pos4: '', $type: linear, $extra: "")
+  background: $color1 /* Old browsers */
+  background: -moz-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}, #{$color4} #{$pos4}) #{$extra}
+  background: -webkit-gradient($type, left top, left bottom, color-stop($pos1,$color1), color-stop($pos2,$color2), color-stop(#{$pos3},#{$color3}), color-stop(#{$pos4}, #{$color4})) #{$extra}
+  background: -webkit-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}, #{$color4} #{$pos4}) #{$extra}
+  background: -o-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}, #{$color4} #{$pos4}) #{$extra}
+  background: -ms-linear-gradient(top, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}, #{$color4} #{$pos4}) #{$extra}
+  background: linear-gradient(to bottom, $color1 $pos1, $color2 $pos2, #{$color3} #{$pos3}, #{$color4} #{$pos4}) #{$extra}
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$color1}, endColorstr=#{$color2})"
+
+=border_image($value)
+  -moz-border-image: $value
+  -o-border-image: $value
+  -webkit-border-image: $value
+  border-image: $value
+
+=border_radius($top_left, $top_right: $top_left, $bottom_right: $top_left, $bottom_left: $top_left)
+  @if unitless($top_left)
+    $top_left: 1px * $top_left
+  @if unitless($top_right)
+    $top_right: 1px * $top_right
+  @if unitless($bottom_right)
+    $bottom_right: 1px * $bottom_right
+  @if unitless($bottom_left)
+    $bottom_left: 1px * $bottom_left
+  @if $top_right == $top_left and $bottom_right == $top_left and $bottom_left == $top_left
+    -moz-border-radius: $top_left
+    -o-border-radius: $top_left
+    -webkit-border-radius: $top_left
+    border-radius: $top_left
+  @else
+    -moz-border-radius-topleft: $top_left
+    -moz-border-radius-topright: $top_right
+    -moz-border-radius-bottomright: $bottom_right
+    -moz-border-radius-bottomleft: $bottom_left
+    -o-border-radius-topleft: $top_left
+    -o-border-radius-topright: $top_right
+    -o-border-radius-bottomright: $bottom_right
+    -o-border-radius-bottomleft: $bottom_left
+    -webkit-border-top-left-radius: $top_left
+    -webkit-border-top-right-radius: $top_right
+    -webkit-border-bottom-right-radius: $bottom_right
+    -webkit-border-bottom-left-radius: $bottom_left
+    border-top-left-radius: $top_left
+    border-top-right-radius: $top_right
+    border-bottom-right-radius: $bottom_right
+    border-bottom-left-radius: $bottom_left
+
+=box_shadow($v1, $v2: "", $v3: "", $v4: "", $v5: "")
+  @if $v5 != ""
+    -moz-box-shadow: $v1, $v2, $v3, $v4, $v5
+    -webkit-box-shadow: $v1, $v2, $v3, $v4, $v5
+    box-shadow: $v1, $v2, $v3, $v4, $v5
+  @if $v4 != ""
+    -moz-box-shadow: $v1, $v2, $v3, $v4
+    -webkit-box-shadow: $v1, $v2, $v3, $v4
+    box-shadow: $v1, $v2, $v3, $v4
+  @if $v3 != ""
+    -moz-box-shadow: $v1, $v2, $v3
+    -webkit-box-shadow: $v1, $v2, $v3
+    box-shadow: $v1, $v2, $v3
+  @else if $v2 != ""
+    -moz-box-shadow: $v1, $v2
+    -webkit-box-shadow: $v1, $v2
+    box-shadow: $v1, $v2
+  @else
+    -moz-box-shadow: $v1
+    -webkit-box-shadow: $v1
+    box-shadow: $v1
+
+=box_sizing($value)
+  -moz-box-sizing: $value
+  -webkit-box-sizing: $value
+  box-sizing: $value
+
+=opacity($opacity)
+  -moz-opacity: $opacity
+  -webkit-opacity: $opacity
+  opacity: $opacity
+  filter: alpha(opacity = $opacity * 100)
+
+=placeholder_color($color: "", $nested: 0)
+  @if $nested == 0
+    ::-webkit-input-placeholder
+      color: $color
+    :-moz-placeholder
+      color: $color
+    ::-moz-placeholder
+      color: $color
+    :-ms-input-placeholder
+      color: $color
+  @else
+    &::-webkit-input-placeholder
+      color: $color
+    &:-moz-placeholder
+      color: $color
+    &::-moz-placeholder
+      color: $color
+    &:-ms-input-placeholder
+      color: $color
+
+=select($value, $options: "")
+  -webkit-touch-callout: $value $options
+  -webkit-user-select: $value $options
+  -khtml-user-select: $value $options
+  @if $value == 'none'
+    -moz-user-select: -moz-none $options
+  @else
+    -moz-user-select: $value $options
+  -ms-user-select: $value $options
+  user-select: $value $options
+
+=selection($background, $color: "", $nested: 0)
+  @if $nested == 0
+    ::-moz-selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+    ::-webkit-selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+    ::selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+  @else
+    &::-moz-selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+    &::-webkit-selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+    &::selection
+      background: $background
+      @if $color != ""
+        color: $color
+        text-shadow: none
+
+=text_shadow($v1, $v2: "", $v3: "", $v4: "", $v5: "")
+  @if $v5 != ""
+    -moz-text-shadow: $v1, $v2, $v3, $v4, $v5
+    -webkit-text-shadow: $v1, $v2, $v3, $v4, $v5
+    text-shadow: $v1, $v2, $v3, $v4, $v5
+  @if $v4 != ""
+    -moz-text-shadow: $v1, $v2, $v3, $v4
+    -webkit-text-shadow: $v1, $v2, $v3, $v4
+    text-shadow: $v1, $v2, $v3, $v4
+  @if $v3 != ""
+    -moz-text-shadow: $v1, $v2, $v3
+    -webkit-text-shadow: $v1, $v2, $v3
+    text-shadow: $v1, $v2, $v3
+  @else if $v2 != ""
+    -moz-text-shadow: $v1, $v2
+    -webkit-text-shadow: $v1, $v2
+    text-shadow: $v1, $v2
+  @else
+    -moz-text-shadow: $v1
+    -webkit-text-shadow: $v1
+    text-shadow: $v1
+
+=transform($t1)
+  -webkit-transform: $t1
+  -moz-transform: $t1
+  -o-transform: $t1
+  -ms-transform: $t1
+
+=transition($t1, $t2: "", $t3: "", $t4: "", $t5: "")
+  @if $t5 != ""
+    -moz-transition: $t1, $t2, $t3, $t4, $t5
+    -o-transition: $t1, $t2, $t3, $t4, $t5
+    -webkit-transition: $t1, $t2, $t3, $t4, $t5
+    transition: $t1, $t2, $t3, $t4, $t5
+  @else if $t4 != ""
+    -moz-transition: $t1, $t2, $t3, $t4
+    -o-transition: $t1, $t2, $t3, $t4
+    -webkit-transition: $t1, $t2, $t3, $t4
+    transition: $t1, $t2, $t3, $t4
+  @else if $t3 != ""
+    -moz-transition: $t1, $t2, $t3
+    -o-transition: $t1, $t2, $t3
+    -webkit-transition: $t1, $t2, $t3
+    transition: $t1, $t2, $t3
+  @else if $t2 != ""
+    -moz-transition: $t1, $t2
+    -o-transition: $t1, $t2
+    -webkit-transition: $t1, $t2
+    transition: $t1, $t2
+  @else
+    -moz-transition: $t1
+    -o-transition: $t1
+    -webkit-transition: $t1
+    transition: $t1
