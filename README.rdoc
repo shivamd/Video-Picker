@@ -5,18 +5,17 @@ Steps to get started:
 * Ruby version
 The App is built on ruby 2.0 and rails 4, so you want to make sure you're runnig ruby 2.0
 
-```
-rvm use 2.0.0
-```
+  rvm use 2.0.0
+
 To update rails, just run the following when you're good with ruby 2.0.0
-```
-bundle install
-```
+
+  bundle install
+
 
 SSL certificate: make sure they are not too old:
-```
-rvm osx-ssl-certs status all
-rvm osx-ssl-certs update all
-```
+
+  rvm osx-ssl-certs status all
+  rvm osx-ssl-certs update all
+
 
 For the keys.yml file, contact the admin.
