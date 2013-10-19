@@ -32,4 +32,14 @@ class SearchController < ApplicationController
     end
   end
 
+  def popular_vines
+    video_links = get_popular_vine_videos(params[:query])
+    if video_links.present? 
+      video_links.map!{ |video| format_vine_response(video) }
+      render json: video_links, status: 200, query: params[:query]
+    else
+      render json: params[:query], status: 404
+    end
+  end
+
 end
