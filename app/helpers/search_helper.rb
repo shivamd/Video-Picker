@@ -53,7 +53,7 @@ module SearchHelper
       duration: video["duration"],
       title: video["title"],
       user_name: video["owner"],
-      date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time 
+      date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time
       view_count: video["views_total"],
       description: video["description"],
       id: video["id"],
@@ -70,32 +70,43 @@ module SearchHelper
   end
 
   def get_recent_vine_videos(query)
-    if query.present? 
-    client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
-    videos = client.search("vine.co #{query}", count: 25)[:statuses]
-    videos.map{ |video| video[:urls][0][:expanded_url].gsub("https://", "") }
+    if query.present?
+      client = Twitter::Client.new(consumer_key: ENV["TWITTER_CONSUMER_KEY"],consumer_secret: ENV["TWITTER_CONSUMER_SECRET"],access_token: ENV["TWITTER_ACCESS_TOKEN"], access_secret: ENV["TWITTER_ACCESS_SECRET"])
+      videos = client.search("vine.co #{query}", count: 25)[:statuses]
+      videos = videos.map do |video|
+        video_urls = video[:urls]
+        if video_urls.present?
+          vine_url = video_urls[0][:expanded_url].gsub("https://", "")
+          vine_url.match(/vine\.co/) ? vine_url : nil
+        end
+      end
+      videos.compact
     end
   end
 
   def format_vine_response(video)
-    agent = Mechanize.new 
-    page = agent.get("http://" + video)
-    source = page.search('video').select { |i| i.name == "video" }[0].children.select{ |i| i.name == "source" }.first.attributes['src'].value
-    thumbnail = page.search('meta[property="og:image"]').first.attributes["content"].value
-    title = page.search('meta[property="og:title"]').first.attributes["content"].value
-    user_name = page.search("div h2").inner_text
+    begin
+      agent = Mechanize.new
+      page = agent.get("http://" + video)
+      source = page.search('video').select { |i| i.name == "video" }[0].children.select{ |i| i.name == "source" }.first.attributes['src'].value
+      thumbnail = page.search('meta[property="og:image"]').first.attributes["content"].value
+      title = page.search('meta[property="og:title"]').first.attributes["content"].value
+      user_name = page.search("div h2").inner_text
 
-    {
-      image: thumbnail,
-      duration: nil, 
-      title: title,
-      user_name: user_name,
-      date: nil,
-      view_count: nil,
-      description: nil,
-      id: video,
-      url: source
-    }
+      {
+        image: thumbnail,
+        duration: nil,
+        title: title,
+        user_name: user_name,
+        date: nil,
+        view_count: nil,
+        description: nil,
+        id: video,
+        url: source
+      }
+    rescue
+      nil
+    end
 
   end
 
@@ -124,7 +135,7 @@ module SearchHelper
     {
       image: thumbnail,
       duration: nil, #will try and pick this up with phantomjs
-      title: title, 
+      title: title,
       user_name: user_name,
       date: date,
       view_count: view_count,
