@@ -41,9 +41,13 @@ module SearchHelper
   end
 
   def get_dailymotion_videos(query)
-    if query.present?
-      response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total").read
-      JSON.parse(response)
+    begin
+      if query.present?
+        response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total").read
+        JSON.parse(response)
+      end
+    rescue 
+      nil
     end
   end
 
@@ -62,10 +66,14 @@ module SearchHelper
   end
 
   def get_popular_vine_videos(query)
-    if query.present?
-      agent = Mechanize.new
-      page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
-      page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    begin
+      if query.present?
+        agent = Mechanize.new
+        page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
+        page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+      end
+    rescue
+      nil
     end
   end
 
@@ -111,38 +119,46 @@ module SearchHelper
   end
 
   def get_qwiki_videos(query)
-    if query.present?
-      agent = Mechanize.new
-      page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
-      page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    begin
+      if query.present?
+        agent = Mechanize.new
+        page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
+        page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+      end
+    rescue
+      nil
     end
   end
 
   def format_qwiki_response(video)
-    agent = Mechanize.new
-    page = agent.get("http://" + video)
-    api_url = page.search('script').to_s.match(/api.+json/)[0]
-    api_page = agent.get("http://www.qwiki.com/" +api_url)
-    body = JSON.parse(api_page.body)
-    source = body["video"]["outputs"].select{ |i| i["type"] == "mp4" }.first["src"]
-    title = body["title"]
-    description = body["description"]
-    user_name = body["user"]["username"]
-    date = body["created_at"]
-    view_count = body["user"]["qwiki_count"] #not sure if this is the view count
-    thumbnail = body["thumbnails"].first["images"].first["src"]
+    begin
+      agent = Mechanize.new
+      page = agent.get("http://" + video)
+      api_url = page.search('script').to_s.match(/api.+json/)[0]
+      api_page = agent.get("http://www.qwiki.com/" +api_url)
+      body = JSON.parse(api_page.body)
+      source = body["video"]["outputs"].select{ |i| i["type"] == "mp4" }.first["src"]
+      title = body["title"]
+      description = body["description"]
+      user_name = body["user"]["username"]
+      date = body["created_at"]
+      view_count = body["user"]["qwiki_count"] #not sure if this is the view count
+      thumbnail = body["thumbnails"].first["images"].first["src"]
 
-    {
-      image: thumbnail,
-      duration: nil, #will try and pick this up with phantomjs
-      title: title,
-      user_name: user_name,
-      date: date,
-      view_count: view_count,
-      description: description,
-      id: video,
-      url: source
-    }
+      {
+        image: thumbnail,
+        duration: nil, #will try and pick this up with phantomjs
+        title: title,
+        user_name: user_name,
+        date: date,
+        view_count: view_count,
+        description: description,
+        id: video,
+        url: source
+      }
+    rescue
+      nil
+    end
   end
 
 end
