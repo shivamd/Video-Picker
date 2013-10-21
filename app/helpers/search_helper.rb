@@ -100,9 +100,11 @@ module SearchHelper
   end
 
   def get_qwiki_videos(query)
-    agent = Mechanize.new
-    page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
-    page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    if query.present?
+      agent = Mechanize.new
+      page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
+      page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+    end
   end
 
   def format_qwiki_response(video)
