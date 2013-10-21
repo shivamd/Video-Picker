@@ -52,4 +52,14 @@ class SearchController < ApplicationController
     end
   end
 
+  def qwiki
+    response = get_qwiki_videos(params[:query])
+    if response.present?
+      videos = response.map{ |video| format_qwiki_response(video) }
+      render json: videos, status: 200, query: params[:query]
+    else
+      render json: params[:query], status: 404
+    end
+  end
+
 end
