@@ -30,9 +30,31 @@ module SearchHelper
      }
   end
 
+
   def get_vimeo_videos(query)
     vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
-    response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"}) if query.present?
+    if query.present?
+      if query.match(/vimeo\.com/)
+        video_id = query.match(/vimeo\.com\/(\w*\/)*(\d+)/)[-1]
+        response = Vimeo::Simple::Video.info(video_id).parsed_response
+      else
+        response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"}) 
+      end
+    end
+  end
+
+  def format_single_vimeo_response(video)
+    {
+     image: video["thumbnail_medium"] ,
+     duration: video["duration"],
+     title: video["title"],
+     user_name: video["user_name"],
+     date: video["upload_date"],
+     view_count: video["stats_number_of_plays"],
+     description: video["description"],
+     id: video["id"],
+     url: video["url"]
+    }
   end
 
   def format_vimeo_response(video)

@@ -23,13 +23,18 @@ class SearchController < ApplicationController
   end
 
   def vimeo
-    response = get_vimeo_videos(params[:query])
-    if response && response["videos"]["video"].present?
-      videos = response["videos"]["video"].map { |video| format_vimeo_response(video) }.compact
-      render json: videos, status: 200, query: params[:query]
-    else
-      render json: params[:query], status: 404
+    query = params[:query]
+    response = get_vimeo_videos(query)
+    if response
+      if query.match(/vimeo\.com/)
+        video = format_single_vimeo_response(response.first)
+        render json: video, status: 200, query: query and return
+      elsif response["videos"]["video"].present?
+        videos = response["videos"]["video"].map { |video| format_vimeo_response(video) }.compact
+        render json: videos, status: 200, query: query and return
+      end
     end
+    render json: { query: query, error: "Couldn't find video" }, status: 404
   end
 
   def dailymotion
