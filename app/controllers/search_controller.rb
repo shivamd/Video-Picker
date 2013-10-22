@@ -3,12 +3,22 @@ class SearchController < ApplicationController
   include SearchHelper
 
   def youtube
-    response = get_youtube_videos(params[:query])
-    if response && response.videos.present?
-      videos = response.videos.map{ |video| format_youtube_response(video) }.compact
-      render :json => videos, :status => 200, :query => params[:query]
+    unless params[:query].match(/(youtu)(be\.com|\.be)/)
+      response = get_youtube_videos(params[:query])
+      if response && response.videos.present?
+        videos = response.videos.map{ |video| format_youtube_response(video) }.compact
+        render :json => videos, :status => 200, :query => params[:query]
+      else
+        render :json => params[:query] ,:status => 404
+      end
     else
-      render :json => params[:query] ,:status => 404
+      video = get_youtube_video(params[:query])
+      if video
+        video = format_youtube_response(video)
+        render json: video, status: 200
+      else 
+        render status: 404, json: "Couldn't find video"
+      end
     end
   end
 

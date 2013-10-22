@@ -7,6 +7,15 @@ module SearchHelper
     response =  client.videos_by(:query => query) if query.present?
   end
 
+  def get_youtube_video(query)
+    begin
+      client = YouTubeIt::Client.new
+      client.video_by(query)
+    rescue
+      nil
+    end
+  end
+
   def format_youtube_response(video)
     {
       image: video.thumbnails[1].url,
