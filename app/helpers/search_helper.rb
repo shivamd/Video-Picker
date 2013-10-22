@@ -4,13 +4,12 @@ module SearchHelper
 
   def get_youtube_videos(query)
     client = YouTubeIt::Client.new
-    response =  client.videos_by(:query => query) if query.present?
-  end
-
-  def get_youtube_video(query)
     begin
-      client = YouTubeIt::Client.new
-      client.video_by(query)
+      if query.match(/(youtu)(be\.com|\.be)/)
+        client.video_by(query)
+      else
+        response =  client.videos_by(:query => query) if query.present?
+      end
     rescue
       nil
     end
