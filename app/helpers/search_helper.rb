@@ -73,7 +73,13 @@ module SearchHelper
   def get_dailymotion_videos(query)
     begin
       if query.present?
-        response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total").read
+        fields = "fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total"
+        if query.match(/dailymotion\.com/)
+          video_id = query.match(/video\/([^_]+)/)[-1]
+          response = open("https://api.dailymotion.com/video/#{video_id}?#{fields}").read
+        else
+          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}").read
+        end
         JSON.parse(response)
       end
     rescue 

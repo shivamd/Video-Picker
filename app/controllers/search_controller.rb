@@ -34,12 +34,16 @@ class SearchController < ApplicationController
 
   def dailymotion
     response = get_dailymotion_videos(params[:query])
-    if response && response["list"].present?
-      videos = response["list"].map{ |video| format_dailymotion_response(video) }.compact
-      render json: videos, status: 200, query: params[:query]
-    else
-      render json: params[:query], status: 404
+    if response 
+      if params[:query].match(/dailymotion\.com/)
+        video = format_dailymotion_response(response)
+        render json: video, status: 200, query: params[:query] and return
+      elsif response["list"].present?
+        videos = response["list"].map{ |video| format_dailymotion_response(video) }.compact
+        render json: videos, status: 200, query: params[:query] and return
+      end
     end
+    render json: { query: params[:query], error: "Couldn't find video"}, status: 404
   end
 
   def popular_vines
