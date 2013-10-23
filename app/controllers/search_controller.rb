@@ -12,9 +12,8 @@ class SearchController < ApplicationController
         videos = response.videos.map{ |video| format_youtube_response(video) }.compact
         render json: videos, status: 200, query: params[:query] and return
       end
-    else
-      render json: { query: params[:query], error: "Couldn't find video" } , status: 404
     end
+    render json: { query: params[:query], error: "Couldn't find video" } , status: 404
   end
 
   def vimeo
