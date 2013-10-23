@@ -29,6 +29,12 @@
         border-bottom: 1px solid lighten($dim-text, 20)
         &.active
           background: $background
+        &.inactive
+          p
+            +text-shadow($white-a3 1px 1px 0)
+            color: lighten($dim-text, 20)
+          &:before
+            opacity: 0.2
         &:hover
           cursor: pointer
         &.youtube,
@@ -111,8 +117,9 @@
       overflow-y: scroll
       .video
         display: inline-block
-        vertical-align: middle
-        height: 100px
+        position: relative
+        vertical-align: top
+        text-align: center
         width: 180px
         margin: 5px
         cursor: pointer
@@ -125,34 +132,56 @@
           z-index: -1
           +transition(all .3s ease)
           +box-shadow(1px 1px 3px rgba(0, 0, 0, 0.1))
-        &:after
-          margin-left: -30px
+        &:before
+          position: absolute
           font-size: 25px
           width: 25px
+          margin-top: 5px
+          color: gray
           font-family: FontAwesome
           +grayfilter(100%)
           +transition(all .3s ease)
-        &:hover:after
+        &:hover:before
           +grayfilter(0%)
         &.source-youtube
-          &:after
+          &:before
             content: "\f167"
-          &:hover:after
+          &:hover:before
             color: $youtube-color
         &.source-instagram
-          &:after
+          &:before
             content: "\f16d"
-          &:hover:after
+          &:hover:before
             color: $instagram-color
         &.source-vimeo
-          &:after
+          &:before
             content: $vimeo-logo
         &.source-dailymotion
-          &:after
+          &:before
             content: $dailymotion-logo
         &.source-vine
-          &:after
+          &:before
             content: $vine-logo
         &.source-qwiki
-          &:after
+          &:before
             content: $qwiki-logo
+        span.duration
+          padding: 0 4px
+          font-size: 11px
+          +text-shadow(black 0px 0px 3px)
+          color: #fff!important
+          height: 14px
+          line-height: 14px
+          right: 0px
+          top: 0px
+          position: absolute
+        p.title
+          padding: 0
+          margin: 0 auto
+          font-size: 14px
+          background: $white-a7
+          line-height: 16px
+          top: 0
+          left: 0
+          right: 0
+
