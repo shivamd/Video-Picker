@@ -25,7 +25,8 @@ module SearchHelper
       view_count: number_with_delimiter(video.view_count, :delimiter => ','),
       description: video.description,
       id: video.video_id.match(/video:(.+)/)[1],
-      url: video.player_url
+      url: video.player_url,
+      source: "youtube"
      }
   end
 
@@ -37,7 +38,7 @@ module SearchHelper
         video_id = query.match(/vimeo\.com\/(\w*\/)*(\d+)/)[-1]
         response = Vimeo::Simple::Video.info(video_id).parsed_response
       else
-        response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"}) 
+        response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"})
       end
     end
   end
@@ -59,14 +60,15 @@ module SearchHelper
   def format_vimeo_response(video)
     {
       image: video["thumbnails"]["thumbnail"][1]["_content"],
-      duration: video["duration"],
+      duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
       title: video["title"],
       user_name: video["owner"]["display_name"],
       date: time_ago_in_words(video["upload_date"]),
       view_count: video["number_of_plays"],
       description: video["description"],
       id: video["id"],
-      url: video["urls"]["url"][0]["_content"]
+      url: video["urls"]["url"][0]["_content"],
+      source: "vimeo"
     }
   end
 
@@ -82,7 +84,7 @@ module SearchHelper
         end
         JSON.parse(response)
       end
-    rescue 
+    rescue
       nil
     end
   end
@@ -90,14 +92,15 @@ module SearchHelper
   def format_dailymotion_response(video)
     {
       image: video["thumbnail_240_url"],
-      duration: video["duration"],
+      duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
       title: video["title"],
       user_name: video["owner"],
       date: time_ago_in_words(Time.at(video["created_time"]).utc.to_datetime), #timestamp to time
       view_count: video["views_total"],
       description: video["description"],
       id: video["id"],
-      url: video["url"]
+      url: video["url"],
+      source: "dailymotion"
     }
   end
 
@@ -152,8 +155,8 @@ module SearchHelper
     rescue
       nil
     end
-
   end
+
 
   def get_qwiki_videos(query)
     begin

@@ -1,0 +1,4 @@
+%img{src: @image}
+%p.title= @title
+-if @duration
+  %span.duration= @duration
