@@ -103,10 +103,11 @@ module SearchHelper
 
   def get_popular_vine_videos(query)
     begin
+      return query.gsub(/http[s]?:\/\//, "") if query.match(/vine\.co/)
       if query.present?
         agent = Mechanize.new
         page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
-        page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
+        page.search('cite').children.map { |i| i.inner_text.gsub(/http[s]?:\/\//, "") }
       end
     rescue
       nil
@@ -120,7 +121,7 @@ module SearchHelper
       videos = videos.map do |video|
         video_urls = video[:urls]
         if video_urls.present?
-          vine_url = video_urls[0][:expanded_url].gsub("https://", "")
+          vine_url = video_urls[0][:expanded_url].gsub(/http[s]:\/\//, "")
           vine_url.match(/vine\.co/) ? vine_url : nil
         end
       end

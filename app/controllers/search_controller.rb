@@ -48,21 +48,26 @@ class SearchController < ApplicationController
   def popular_vines
     video_links = get_popular_vine_videos(params[:query])
     if video_links.present?
-      video_links.map!{ |video| format_vine_response(video) }.compact
-      render json: video_links, status: 200, query: params[:query]
-    else
-      render json: params[:query], status: 404
+      if params[:query].match(/vine\.co/)
+        video = format_vine_response(video_links)
+        render json: video, status: 200, query: params[:query] and return
+      else
+        video_links.map!{ |video| format_vine_response(video) }.compact
+        render json: video_links, status: 200, query: params[:query] and return
+      end
     end
+    render json: { query: params[:query], error: "Couldn't find video" }, status: 404
   end
 
   def recent_vines
-    video_links = get_recent_vine_videos(params[:query])
-    if video_links.present?
-      video_links.map!{ |video| format_vine_response(video) }.compact
-      render json: video_links, status: 200, query: params[:query]
-    else
-      render json: params[:query], status: 404
+    unless params[:query].match(/vine\.co/)
+      video_links = get_recent_vine_videos(params[:query])
+      if video_links.present?
+        video_links.map!{ |video| format_vine_response(video) }.compact
+        render json: video_links, status: 200, query: params[:query] and return
+      end
     end
+    render json: { query: params[:query], error: "Couldn't find video" }, status: 404
   end
 
   def qwiki
