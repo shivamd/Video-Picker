@@ -150,7 +150,8 @@ module SearchHelper
         view_count: nil,
         description: nil,
         id: video,
-        url: source
+        url: source,
+        source: "vine"
       }
     rescue
       nil
