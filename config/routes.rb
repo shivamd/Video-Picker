@@ -8,6 +8,7 @@ Videopicker::Application.routes.draw do
     get "dailymotion"
     get "popular_vines"
     get "recent_vines"
+    get "qwiki"
   end
 
   mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)

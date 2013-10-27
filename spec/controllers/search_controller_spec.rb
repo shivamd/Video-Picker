@@ -111,4 +111,25 @@ describe SearchController do
 		end
   end
 
+  describe "#qwiki" do 
+    it "should return a 200" do 
+      get :qwiki, :query => "test"
+      expect(response.status).to eq(200)
+    end
+
+		it "should not make a search if query is blank" do
+			get :qwiki,  :query => ''
+			expect(response.status).to eq(404)
+		end
+
+		it "should 404 if there are no results" do
+			get :qwiki,  :query => 'uaohsuhsdf'
+			expect(response.status).to eq(404)
+		end
+
+		it "should return JSON data" do
+			get :qwiki,  :query => 'test'
+			response.header['Content-Type'].should include 'application/json'
+		end
+  end
 end
