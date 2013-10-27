@@ -150,7 +150,8 @@ module SearchHelper
         view_count: nil,
         description: nil,
         id: video,
-        url: source
+        url: source,
+        source: "vine"
       }
     rescue
       nil
@@ -198,7 +199,8 @@ module SearchHelper
         view_count: view_count,
         description: description,
         id: video,
-        url: source
+        url: source,
+        source: "qwiki"
       }
     rescue
       nil

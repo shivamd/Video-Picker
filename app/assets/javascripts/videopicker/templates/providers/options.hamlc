@@ -1,0 +1,4 @@
+<div class="options">
+	<button data-id="#{@videoId}" class="insert">Insert</button>
+	<button class="back">Back</button>
+</div>
