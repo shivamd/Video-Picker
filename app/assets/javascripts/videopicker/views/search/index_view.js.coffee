@@ -38,6 +38,8 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   launchSearch: (e) ->
     e.preventDefault()
+    $(".preview").remove()
+    $(".results").show()
     query = $("input[name='search']").val()
     query_sources = []
     _.each(@$("li"), (filter) ->
