@@ -199,7 +199,8 @@ module SearchHelper
         view_count: view_count,
         description: description,
         id: video,
-        url: source
+        url: source,
+        source: "qwiki"
       }
     rescue
       nil
