@@ -14,7 +14,6 @@ class Videopicker.Views.Preview.IndexView extends Backbone.View
     @renderSource(@videoId, @source)
     @
 
-
   renderSource: (videoId, source) ->
   	previewTemplate = JST["videopicker/templates/providers/#{source}"]
   	$(@el).prepend(previewTemplate({videoId: videoId}))

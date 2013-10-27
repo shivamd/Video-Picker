@@ -18,6 +18,7 @@ class Videopicker.Views.Search.VideoView extends Backbone.View
     @
 
   showPreview: (e) ->
+    $(".results").hide()
     $target = $(e.currentTarget)
     source = $target.parent().attr("data-source")
     videoId = $target.attr('data-id')
