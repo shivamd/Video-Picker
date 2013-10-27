@@ -1,0 +1,2 @@
+%iframe.vine-embed{frameborder: "0", height: "300", src: "https://#{@videoId}/card", width: "425"}
+%script{async: "", charset: "utf-8", src: "//platform.vine.co/static/scripts/embed.js"}
