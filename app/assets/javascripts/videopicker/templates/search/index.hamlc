@@ -9,7 +9,7 @@
 
 .search
   %form
-    %input{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
-    %input{type: "submit", value: "Search!"}
+    %input.button{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
+    %input.button.submit{type: "submit", value: "Search!"}
 
   .results

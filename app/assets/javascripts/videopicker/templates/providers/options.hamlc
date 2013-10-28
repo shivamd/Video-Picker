@@ -1,4 +1,3 @@
-<div class="options">
-	<button data-id="#{@videoId}" class="insert">Insert</button>
-	<button class="back">Back</button>
-</div>
+.options
+	%button.button.back.submit Back
+  %button.button.insert.submit{ data-id: "#{@videoId}"} Insert

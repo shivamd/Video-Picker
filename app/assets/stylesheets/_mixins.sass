@@ -238,3 +238,17 @@
     -o-transition: $t1
     -webkit-transition: $t1
     transition: $t1
+
+=after-arrow($border-color: lighten($dim-text, 20), $font-color: transparent)
+  border-left: 1px solid $border-color
+  background-image: -webkit-linear-gradient(top, $font-color 0%, $font-color 100%)
+  background-image: linear-gradient(top, $font-color 0%, $font-color 100%)
+
+=before-arrow($border-color: lighten($dim-text, 20), $font-color: transparent)
+  border-left: 1px solid $border-color
+  background-image: -webkit-linear-gradient(top, $font-color 0%, $font-color 100%)
+  background-image: linear-gradient(top, $font-color 0%, $font-color 100%)
+
+=arrow-twist($angle: 35deg)
+  -webkit-transform: skew($angle, 0)
+  transform: skew($angle, 0)
