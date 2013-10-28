@@ -18,7 +18,6 @@ class Videopicker.Views.Search.VideoView extends Backbone.View
     @
 
   showPreview: (e) ->
-    $(".results").hide()
     $target = $(e.currentTarget)
     source = $target.parent().attr("data-source")
     videoId = $target.attr('data-id')
@@ -27,3 +26,8 @@ class Videopicker.Views.Search.VideoView extends Backbone.View
       source: source
     })
     $(".search").append(previewView.render().el)
+    $(previewView.el).animate(
+      marginLeft: "-=449px"
+    , 400, ->
+      $(".results").hide()
+    )

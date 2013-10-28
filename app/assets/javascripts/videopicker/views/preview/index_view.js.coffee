@@ -23,5 +23,9 @@ class Videopicker.Views.Preview.IndexView extends Backbone.View
 
   cancel: ->
     $(".results").show()
-    @remove()
+    $(@el).animate(
+      marginLeft: "+=450px"
+    , 700, ->
+      @remove()
+    )
 
