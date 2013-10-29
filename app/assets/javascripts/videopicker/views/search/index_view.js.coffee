@@ -64,7 +64,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       source
     $.ajax
       type: "get"
-      url: "/search/#{query_source}"
+      url: "/api/search/#{query_source}"
       dataType: 'json'
       data: {query: query}
       success: (response, data) ->
