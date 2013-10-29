@@ -16,3 +16,4 @@
 /tmp
 /config/keys.yml
 /config/database.yml
+.DS_Store
