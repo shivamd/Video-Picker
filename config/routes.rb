@@ -19,5 +19,7 @@ Videopicker::Application.routes.draw do
     end
   end
 
+  resources :applications, only: [:new, :index, :create]
+
   mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
 end
