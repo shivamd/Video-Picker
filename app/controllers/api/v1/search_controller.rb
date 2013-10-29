@@ -1,6 +1,7 @@
 module Api
   module V1
     class SearchController < ApplicationController
+      before_filter :restrict_access
 
     	include SearchHelper
 
@@ -84,6 +85,13 @@ module Api
 		    end
 		    render json: { query: params[:query], error: "Couldn't find video" }, status: 404
 		  end
+
+      private 
+
+      def restrict_access
+        app = Application.find_by_access_token(params[:access_token])
+        head :unauthorized unless app
+      end
 
     end
   end
