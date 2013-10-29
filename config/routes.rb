@@ -1,9 +1,11 @@
+require 'api_constraints'
+
 Videopicker::Application.routes.draw do
 
   root :to => 'home#index'
 
-  namespace :api do 
-    namespace :v1 do
+  namespace :api do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       namespace :search do
         get "youtube"
         get "vimeo"
