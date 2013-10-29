@@ -1,0 +1,16 @@
+<div id="apps">
+  <ul>
+    <% @applications.each do |app| %>
+      <li>
+        <div class="attr name">
+          <h2>Name:</h2>
+          <p><%= app.name %></p>
+        </div>
+        <div class="attr token">
+          <h2>Token:</h2>
+          <p><%= app.access_token %></p>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
