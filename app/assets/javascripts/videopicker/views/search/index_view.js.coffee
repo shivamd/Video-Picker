@@ -25,6 +25,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     else
       filter.removeClass "inactive"
       filter.addClass "active"
+    @refreshResults()
 
   isolateSource: (e) ->
     @$("li").removeClass "active"
@@ -35,6 +36,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       window.getSelection().removeAllRanges()
     else if document.selection
       document.selection.empty()
+    @refreshResults()
 
   launchSearch: (e) ->
     e.preventDefault()
@@ -90,3 +92,13 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       view = new Videopicker.Views.Search.VideoView({model: video})
       @$(".results").append(view.render().el)
     , @)
+
+  refreshResults: ->
+    _.each(@$(".results .video"), (videoDiv) ->
+      source = @$(".source[data-name=" + $(videoDiv).attr("data-source") + "]")
+      if source.hasClass("active")
+        $(videoDiv).show()
+      else
+        $(videoDiv).hide()
+    , @)
+
