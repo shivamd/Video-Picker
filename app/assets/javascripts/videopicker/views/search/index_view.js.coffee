@@ -68,9 +68,25 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       dataType: 'json'
       data: {query: query}
       success: (response, data) ->
+        newVideos = []
         _.each(response, (video) ->
           self.video = new Videopicker.Models.Video(video)
           self.videos.add(self.video)
-          view = new Videopicker.Views.Search.VideoView({model: self.video})
-          self.$(".results").append(view.render().el)
+          newVideos.push self.video
         , self)
+        self.sortVideos(newVideos)
+
+  sortVideos: (newVideos) ->
+    videos = _.sortBy(newVideos, (video) ->
+      if video.get("view_count")
+        if _.isNumber(video.get("view_count"))
+          - video.get("view_count")
+        else
+          - Number(video.get("view_count").replace(/[^0-9\.]+/g,""))
+      else
+        - 1
+    )
+    _.each(videos, (video) ->
+      view = new Videopicker.Views.Search.VideoView({model: video})
+      @$(".results").append(view.render().el)
+    , @)
