@@ -37,6 +37,6 @@ end
 gem 'youtube_it'
 gem 'vimeo'
 gem 'twitter'
-
+gem 'instagram'
 #Scraping tools
 gem 'mechanize'
