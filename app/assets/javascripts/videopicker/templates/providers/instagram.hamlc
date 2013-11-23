@@ -1,0 +1,1 @@
+%iframe{allowtransparency: "true", frameborder: "0", height: "300", scrolling: "no", src: "#{@videoId}embed", width: "425"}
