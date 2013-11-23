@@ -226,7 +226,7 @@ module SearchHelper
     date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s"))
     view_count = video["likes"]["count"]
     source =video["videos"]["standard_resolution"]["url"]
-    video = video["id"]
+    video = video["link"]
     {
       image: thumbnail,
       duration: nil,
