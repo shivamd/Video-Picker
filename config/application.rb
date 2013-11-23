@@ -18,6 +18,8 @@ module Videopicker
     ENV["TWITTER_CONSUMER_SECRET"] = api_keys["TWITTER_CONSUMER_SECRET"]
     ENV["TWITTER_ACCESS_TOKEN"] = api_keys["TWITTER_ACCESS_TOKEN"]
     ENV["TWITTER_ACCESS_SECRET"] = api_keys["TWITTER_ACCESS_SECRET"]
+    ENV["INSTAGRAM_CLIENT_ID"] = api_keys["INSTAGRAM_CLIENT_ID"]
+    ENV["INSTAGRAM_SECRET"] = api_keys["INSTAGRAM_SECRET"]
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
