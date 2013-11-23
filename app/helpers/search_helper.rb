@@ -207,4 +207,38 @@ module SearchHelper
     end
   end
 
+  def get_instagram_videos(query)
+    if query.present?
+      client_id = ENV["INSTAGRAM_CLIENT_ID"]
+      agent = Mechanize.new
+      page = agent.get("https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}")
+      response = JSON.parse(page.body)["data"]
+      response.select{ |media| media["videos"].present? }
+    end
+  end
+
+  def format_instagram_video(video)
+    thumbnail = video["images"]["thumbnail"]["url"]
+    duration = nil
+    user_name = video["caption"]["from"]["username"]
+    title = "#{user_name}'s video"
+    description = video["caption"]["text"]
+    date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s"))
+    view_count = video["likes"]["count"]
+    source =video["videos"]["standard_resolution"]["url"]
+    video = video["id"]
+    {
+      image: thumbnail,
+      duration: nil,
+      title: title,
+      user_name: user_name,
+      date: date,
+      view_count: view_count,
+      description: description,
+      id: video,
+      url: source,
+      source: "instagram"
+    }
+  end
+
 end

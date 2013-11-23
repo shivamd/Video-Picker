@@ -86,7 +86,16 @@ module Api
         render json: { query: params[:query], error: "Couldn't find video" }, status: 404
       end
 
-      private 
+      def instagram
+        videos = get_instagram_videos(params[:query])
+        if response.present?
+          videos = videos.map { |video| format_instagram_video(video) }.compact
+          render json: videos, status: 200, query: params[:query] and return
+        end
+        render json: { query: params[:query], error: "Couldn't find video" }, status: 404
+      end
+
+      private
 
       def restrict_access
         app = Application.find_by_access_token(params[:access_token])
