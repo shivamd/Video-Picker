@@ -42,6 +42,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     e.preventDefault()
     $(".preview").remove()
     $(".results").show()
+    self.$(".loader").removeClass "hidden"
     query = $("input[name='search']").val()
     query_sources = []
     _.each(@$("li"), (filter) ->
@@ -70,6 +71,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       dataType: 'json'
       data: {query: query}
       success: (response, data) ->
+        self.$(".loader").addClass "hidden"
         newVideos = []
         _.each(response, (video) ->
           self.video = new Videopicker.Models.Video(video)
