@@ -6,7 +6,7 @@ module Api
       include SearchHelper
 
       def youtube
-        response = get_youtube_videos(params[:query])
+        response = get_youtube_videos(params)
         if response
           if params[:query].match(/(youtu)(be\.com|\.be)/)
             video = format_youtube_response(response)

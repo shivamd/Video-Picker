@@ -2,13 +2,15 @@ module SearchHelper
 	include ActionView::Helpers::DateHelper
 	include ActionView::Helpers::NumberHelper
 
-  def get_youtube_videos(query)
+  def get_youtube_videos(params)
+    query = params[:query]
+    page = params[:page]
     client = YouTubeIt::Client.new
     begin
       if query.match(/(youtu)(be\.com|\.be)/)
         client.video_by(query)
       else
-        response =  client.videos_by(:query => query) if query.present?
+        response =  client.videos_by(:query => query, :page => page) if query.present?
       end
     rescue
       nil

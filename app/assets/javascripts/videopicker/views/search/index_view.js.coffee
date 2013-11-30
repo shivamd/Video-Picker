@@ -43,8 +43,6 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     e.preventDefault()
     $(".preview").remove()
     $(".results").show()
-    $(".results").off("scroll").on "scroll", (e) ->
-      self.checkVideoScroll(e)
     self.$(".loader").removeClass "hidden"
     query = $("input[name='search']").val()
     query_sources = []
@@ -72,7 +70,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       type: "get"
       url: "/api/search/#{query_source}"
       dataType: 'json'
-      data: {query: query}
+      data: {query: query, page: 1}
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
@@ -84,6 +82,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         self.sortVideos(newVideos)
 
   sortVideos: (newVideos) ->
+    self = @
     videos = _.sortBy(newVideos, (video) ->
       if video.get("view_count")
         if _.isNumber(video.get("view_count"))
@@ -97,6 +96,8 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       view = new Videopicker.Views.Search.VideoView({model: video})
       @$(".results").append(view.render().el)
     , @)
+    $(".results").off("scroll").on "scroll", (e) ->
+      self.checkVideoScroll(e)
 
   refreshResults: ->
     _.each(@$(".results .video"), (videoDiv) ->
@@ -108,8 +109,43 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     , @)
 
   checkVideoScroll: (e) ->
-    self = @
     elem = $(e.currentTarget)
-    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight())
-      console.log("bottom")
+    page = ($('.results .source-youtube').length) / 25 + 1
+    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) and (parseFloat(parseInt(page)) == parseFloat(page))
+      $(e.currentTarget).off "scroll"
+      query = $("input[name='search']").val()
+      query_sources = []
+      _.each(@$("li"), (filter) ->
+        if $(filter).hasClass("active")
+          query_sources.push $(filter).attr("data-name")
+      )
+      @_getMoreVideos(query, query_sources, page)
+
+  _getMoreVideos: (query, query_sources,page) ->
+    self = @
+    self.videos = new Videopicker.Collections.VideosCollection()
+    _.each(query_sources, (source) ->
+      self._moreVideos(query, source, page)
+    , self)
+
+  _moreVideos: (query, source, page) ->
+    self = @
+    query_source = if source == "vine"
+      "popular_vines"
+    else
+      source
+    $.ajax
+      type: "get"
+      url: "/api/search/#{query_source}"
+      dataType: 'json'
+      data: {query: query, page: page}
+      success: (response, data) ->
+        self.$(".loader").addClass "hidden"
+        newVideos = []
+        _.each(response, (video) ->
+          self.video = new Videopicker.Models.Video(video)
+          self.videos.add(self.video)
+          newVideos.push self.video
+        , self)
+        self.sortVideos(newVideos)
 
