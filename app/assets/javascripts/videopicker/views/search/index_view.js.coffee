@@ -39,9 +39,12 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     @refreshResults()
 
   launchSearch: (e) ->
+    self= @
     e.preventDefault()
     $(".preview").remove()
     $(".results").show()
+    $(".results").off("scroll").on "scroll", (e) ->
+      self.checkVideoScroll(e)
     self.$(".loader").removeClass "hidden"
     query = $("input[name='search']").val()
     query_sources = []
@@ -103,4 +106,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       else
         $(videoDiv).hide()
     , @)
+
+  checkVideoScroll: (e) ->
+    self = @
+    elem = $(e.currentTarget)
+    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight())
+      console.log("bottom")
 
