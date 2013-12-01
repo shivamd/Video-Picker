@@ -217,11 +217,19 @@ module SearchHelper
     end
   end
 
-  def get_instagram_videos(query)
+  def get_instagram_videos(params)
+    query = params[:query]
+    page = params[:pages]["instagram"] if params[:pages]
+    client_id = ENV["INSTAGRAM_CLIENT_ID"]
+    if page
+      url = session[:instagram_url]
+    else
+      url = "https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}"
+    end
     if query.present?
-      client_id = ENV["INSTAGRAM_CLIENT_ID"]
       agent = Mechanize.new
-      page = agent.get("https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}")
+      page = agent.get(url)
+      session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"]
       response = JSON.parse(page.body)["data"]
       response.select{ |media| media["videos"].present? }
     end
@@ -230,10 +238,10 @@ module SearchHelper
   def format_instagram_video(video)
     thumbnail = video["images"]["thumbnail"]["url"]
     duration = nil
-    user_name = video["caption"]["from"]["username"]
+    user_name = video["caption"]["from"]["username"] if video["caption"]
     title = "#{user_name}'s video"
-    description = video["caption"]["text"]
-    date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s"))
+    description = video["caption"]["text"] if video["caption"]
+    date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s")) if video["caption"]
     view_count = video["likes"]["count"]
     source =video["videos"]["standard_resolution"]["url"]
     video = video["link"]

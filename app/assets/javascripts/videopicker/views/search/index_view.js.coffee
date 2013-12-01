@@ -7,6 +7,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   initialize: (options) ->
     @sources = options.sources
+    @instagramPage = 1
 
   events:
     "click .source" : "manageSource"
@@ -111,13 +112,14 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
   checkVideoScroll: (e) ->
     elem = $(e.currentTarget)
     pages = {}
-    pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
-    pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
-    pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
-    pages["popular_vines"] = ($('.results .source-vine').length)
-    pages["qwiki"] = ($('.results .source-qwiki').length)
 
     if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) #and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
+      pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+      pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
+      pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
+      pages["popular_vines"] = ($('.results .source-vine').length)
+      pages["qwiki"] = ($('.results .source-qwiki').length)
+      pages["instagram"] = @instagramPage += 1
       $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
       query_sources = []

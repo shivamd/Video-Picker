@@ -87,7 +87,7 @@ module Api
       end
 
       def instagram
-        videos = get_instagram_videos(params[:query])
+        videos = get_instagram_videos(params)
         if response.present?
           videos = videos.map { |video| format_instagram_video(video) }.compact
           render json: videos, status: 200, query: params[:query] and return
