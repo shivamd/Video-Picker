@@ -3,9 +3,17 @@
 
 html
   background: $background
+  height: 100%
+  width: 100%
+
+body
+  height: 100%
+  width: 100%
+  margin: 0
 
 .container
   vertical-align: center
+  height: 100%
 
 *
   font-family: Helvetica-Neue, Helvetica, Arial
@@ -92,3 +100,7 @@ fieldset
     &:hover
       &:before
         +before-arrow(lighten($dim-text, 20), $white-a8)
+
+#user-nav
+  position: absolute
+  right: 20px
