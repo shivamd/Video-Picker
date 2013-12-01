@@ -112,8 +112,9 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     elem = $(e.currentTarget)
     pages = {}
     pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+    pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
 
-    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
+    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) #and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
       $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
       query_sources = []

@@ -21,7 +21,7 @@ module Api
 
       def vimeo
         query = params[:query]
-        response = get_vimeo_videos(query)
+        response = get_vimeo_videos(params)
         if response
           if query.match(/vimeo\.com/)
             video = format_single_vimeo_response(response.first)

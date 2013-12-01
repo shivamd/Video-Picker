@@ -33,14 +33,16 @@ module SearchHelper
   end
 
 
-  def get_vimeo_videos(query)
+  def get_vimeo_videos(params)
+    query = params[:query]
+    page = params[:pages]["vimeo"] if params[:pages]
     vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
     if query.present?
       if query.match(/vimeo\.com/)
         video_id = query.match(/vimeo\.com\/(\w*\/)*(\d+)/)[-1]
         response = Vimeo::Simple::Video.info(video_id).parsed_response
       else
-        response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"})
+        response = vimeo.search(query, { :page => page || 1, :per_page => "25", :full_response => "1"})
       end
     end
   end
