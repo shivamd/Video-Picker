@@ -110,12 +110,14 @@ module SearchHelper
     }
   end
 
-  def get_popular_vine_videos(query)
+  def get_popular_vine_videos(params)
+    query = params[:query]
+    start = params[:pages]["popular_vines"] if params[:pages]
     begin
       return query.gsub(/http[s]?:\/\//, "") if query.match(/vine\.co/)
       if query.present?
         agent = Mechanize.new
-        page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
+        page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}&start=#{start || 0}")
         page.search('cite').children.map { |i| i.inner_text.gsub(/http[s]?:\/\//, "") }
       end
     rescue

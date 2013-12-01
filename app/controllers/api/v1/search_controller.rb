@@ -49,7 +49,7 @@ module Api
       end
 
       def popular_vines
-        video_links = get_popular_vine_videos(params[:query])
+        video_links = get_popular_vine_videos(params)
         if video_links.present?
           if params[:query].match(/vine\.co/)
             video = format_vine_response(video_links)
