@@ -74,7 +74,7 @@ module Api
       end
 
       def qwiki
-        response = get_qwiki_videos(params[:query])
+        response = get_qwiki_videos(params)
         if response.present?
           if params[:query].match(/qwiki\.com/)
             render json: response, status: 200, query: params[:query] and return

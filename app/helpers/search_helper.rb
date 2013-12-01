@@ -167,14 +167,16 @@ module SearchHelper
   end
 
 
-  def get_qwiki_videos(query)
+  def get_qwiki_videos(params)
+    query = params[:query]
+    start = params[:pages]["qwiki"] if params[:pages]
     begin
       if query.present?
         if query.match(/qwiki\.com/)
           format_qwiki_response(query)
         else
           agent = Mechanize.new
-          page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
+          page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}&start=#{start || 0}")
           page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
         end
       end

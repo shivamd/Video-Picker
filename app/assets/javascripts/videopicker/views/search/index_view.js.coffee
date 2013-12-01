@@ -115,6 +115,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
     pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
     pages["popular_vines"] = ($('.results .source-vine').length)
+    pages["qwiki"] = ($('.results .source-qwiki').length)
 
     if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) #and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
       $(e.currentTarget).off "scroll"
