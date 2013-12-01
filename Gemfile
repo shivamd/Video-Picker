@@ -22,6 +22,9 @@ gem 'font-awesome-rails'
 gem 'haml_coffee_assets'
 gem 'jbuilder', '~> 1.2'
 
+#search
+gem 'text'
+
 group :doc do
   gem 'sdoc', require: false
 end
