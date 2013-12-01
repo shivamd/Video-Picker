@@ -76,7 +76,9 @@ module SearchHelper
     }
   end
 
-  def get_dailymotion_videos(query)
+  def get_dailymotion_videos(params)
+    query = params[:query]
+    page = params[:pages]["dailymotion"] if params[:pages]
     begin
       if query.present?
         fields = "fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total"
@@ -84,7 +86,7 @@ module SearchHelper
           video_id = query.match(/video\/([^_]+)/)[-1]
           response = open("https://api.dailymotion.com/video/#{video_id}?#{fields}").read
         else
-          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}").read
+          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}&page=#{page || 1}").read
         end
         JSON.parse(response)
       end

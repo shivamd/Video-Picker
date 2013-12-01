@@ -35,7 +35,7 @@ module Api
       end
 
       def dailymotion
-        response = get_dailymotion_videos(params[:query])
+        response = get_dailymotion_videos(params)
         if response
           if params[:query].match(/dailymotion\.com/)
             video = format_dailymotion_response(response)
