@@ -12,7 +12,7 @@ module Api
             video = format_youtube_response(response)
             render json: video, status: 200, query: params[:query] and return
           elsif response.videos.present?
-            videos = response.videos.map{ |video| format_youtube_response(video) }.compact
+            videos = response.videos.map{ |video| format_youtube_response(video, params[:query]) }.compact
             render json: videos, status: 200, query: params[:query] and return
           end
         end
@@ -27,7 +27,7 @@ module Api
             video = format_single_vimeo_response(response.first)
             render json: video, status: 200, query: query and return
           elsif response["videos"]["video"].present?
-            videos = response["videos"]["video"].map { |video| format_vimeo_response(video) }.compact
+            videos = response["videos"]["video"].map { |video| format_vimeo_response(video, params[:query]) }.compact
             render json: videos, status: 200, query: query and return
           end
         end
@@ -41,7 +41,7 @@ module Api
             video = format_dailymotion_response(response)
             render json: video, status: 200, query: params[:query] and return
           elsif response["list"].present?
-            videos = response["list"].map{ |video| format_dailymotion_response(video) }.compact
+            videos = response["list"].map{ |video| format_dailymotion_response(video, params[:query]) }.compact
             render json: videos, status: 200, query: params[:query] and return
           end
         end
@@ -55,7 +55,7 @@ module Api
             video = format_vine_response(video_links)
             render json: video, status: 200, query: params[:query] and return
           else
-            video_links.map!{ |video| format_vine_response(video) }.compact
+            video_links.map!{ |video| format_vine_response(video, params[:query]) }.compact
             render json: video_links, status: 200, query: params[:query] and return
           end
         end
@@ -66,7 +66,7 @@ module Api
         unless params[:query].match(/vine\.co/)
           video_links = get_recent_vine_videos(params[:query])
           if video_links.present?
-            video_links.map!{ |video| format_vine_response(video) }.compact
+            video_links.map!{ |video| format_vine_response(video, params[:query]) }.compact
             render json: video_links, status: 200, query: params[:query] and return
           end
         end
@@ -79,7 +79,7 @@ module Api
           if params[:query].match(/qwiki\.com/)
             render json: response, status: 200, query: params[:query] and return
           else
-            videos = response.map{ |video| format_qwiki_response(video) }.compact
+            videos = response.map{ |video| format_qwiki_response(video, params[:query]) }.compact
             render json: videos, status: 200, query: params[:query] and return
           end
         end
@@ -89,7 +89,7 @@ module Api
       def instagram
         videos = get_instagram_videos(params[:query])
         if response.present?
-          videos = videos.map { |video| format_instagram_video(video) }.compact
+          videos = videos.map { |video| format_instagram_video(video, params[:query]) }.compact
           render json: videos, status: 200, query: params[:query] and return
         end
         render json: { query: params[:query], error: "Couldn't find video" }, status: 404
