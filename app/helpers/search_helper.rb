@@ -15,7 +15,8 @@ module SearchHelper
     end
   end
 
-  def format_youtube_response(video)
+  def format_youtube_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     {
       image: video.thumbnails[1].url,
       duration: Time.at(video.duration).utc.strftime("%H:%M:%S"),
@@ -26,7 +27,8 @@ module SearchHelper
       description: video.description,
       id: video.video_id.match(/video:(.+)/)[1],
       url: video.player_url,
-      source: "youtube"
+      source: "youtube",
+      accuracy: white.similarity(video.title, query)
      }
   end
 
@@ -43,7 +45,8 @@ module SearchHelper
     end
   end
 
-  def format_single_vimeo_response(video)
+  def format_single_vimeo_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     {
      image: video["thumbnail_medium"] ,
      duration: video["duration"],
@@ -53,11 +56,13 @@ module SearchHelper
      view_count: video["stats_number_of_plays"],
      description: video["description"],
      id: video["id"],
-     url: video["url"]
+     url: video["url"],
+      accuracy: white.similarity(video["title"], query)
     }
   end
 
-  def format_vimeo_response(video)
+  def format_vimeo_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnails"]["thumbnail"][1]["_content"],
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -68,7 +73,8 @@ module SearchHelper
       description: video["description"],
       id: video["id"],
       url: video["urls"]["url"][0]["_content"],
-      source: "vimeo"
+      source: "vimeo",
+      accuracy: white.similarity(video["title"], query)
     }
   end
 
@@ -89,7 +95,8 @@ module SearchHelper
     end
   end
 
-  def format_dailymotion_response(video)
+  def format_dailymotion_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnail_240_url"],
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -100,7 +107,8 @@ module SearchHelper
       description: video["description"],
       id: video["id"],
       url: video["url"],
-      source: "dailymotion"
+      source: "dailymotion",
+      accuracy: white.similarity(video["title"], query)
     }
   end
 
@@ -132,7 +140,8 @@ module SearchHelper
     end
   end
 
-  def format_vine_response(video)
+  def format_vine_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -151,7 +160,8 @@ module SearchHelper
         description: nil,
         id: video,
         url: source,
-        source: "vine"
+        source: "vine",
+        accuracy: white.similarity(title, query)
       }
     rescue
       nil
@@ -175,7 +185,8 @@ module SearchHelper
     end
   end
 
-  def format_qwiki_response(video)
+  def format_qwiki_response(video, query = nil)
+    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -200,7 +211,8 @@ module SearchHelper
         description: description,
         id: video,
         url: source,
-        source: "qwiki"
+        source: "qwiki",
+        accuracy: white.similarity(title, query)
       }
     rescue
       nil
@@ -217,7 +229,8 @@ module SearchHelper
     end
   end
 
-  def format_instagram_video(video)
+  def format_instagram_video(video, query = nil)
+    white = Text::WhiteSimilarity.new
     thumbnail = video["images"]["thumbnail"]["url"]
     duration = nil
     user_name = video["caption"]["from"]["username"]
@@ -237,7 +250,8 @@ module SearchHelper
       description: description,
       id: video,
       url: source,
-      source: "instagram"
+      source: "instagram",
+      accuracy: white.similarity(title, query)
     }
   end
 
