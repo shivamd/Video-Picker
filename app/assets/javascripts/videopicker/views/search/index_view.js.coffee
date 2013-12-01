@@ -80,13 +80,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   sortVideos: (newVideos) ->
     videos = _.sortBy(newVideos, (video) ->
-      if video.get("view_count")
-        if _.isNumber(video.get("view_count"))
-          - video.get("view_count")
-        else
-          - Number(video.get("view_count").replace(/[^0-9\.]+/g,""))
-      else
-        - 1
+      - video.get("accuracy")
     )
     _.each(videos, (video) ->
       view = new Videopicker.Views.Search.VideoView({model: video})
