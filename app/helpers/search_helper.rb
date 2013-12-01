@@ -4,7 +4,7 @@ module SearchHelper
 
   def get_youtube_videos(params)
     query = params[:query]
-    page = params[:page]
+    page = params[:pages]["youtube"] if params[:pages]
     client = YouTubeIt::Client.new
     begin
       if query.match(/(youtu)(be\.com|\.be)/)

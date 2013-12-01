@@ -110,8 +110,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   checkVideoScroll: (e) ->
     elem = $(e.currentTarget)
-    page = ($('.results .source-youtube').length) / 25 + 1
-    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) and (parseFloat(parseInt(page)) == parseFloat(page))
+    pages = {}
+    pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+
+    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
       $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
       query_sources = []
@@ -119,16 +121,16 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         if $(filter).hasClass("active")
           query_sources.push $(filter).attr("data-name")
       )
-      @_getMoreVideos(query, query_sources, page)
+      @_getMoreVideos(query, query_sources, pages)
 
-  _getMoreVideos: (query, query_sources,page) ->
+  _getMoreVideos: (query, query_sources,pages) ->
     self = @
     self.videos = new Videopicker.Collections.VideosCollection()
     _.each(query_sources, (source) ->
-      self._moreVideos(query, source, page)
+      self._moreVideos(query, source, pages)
     , self)
 
-  _moreVideos: (query, source, page) ->
+  _moreVideos: (query, source, pages) ->
     self = @
     query_source = if source == "vine"
       "popular_vines"
@@ -138,7 +140,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       type: "get"
       url: "/api/search/#{query_source}"
       dataType: 'json'
-      data: {query: query, page: page}
+      data: {query: query, pages: pages}
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
