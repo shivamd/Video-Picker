@@ -114,11 +114,22 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     pages = {}
 
     if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) #and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
+      videos = []
       pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+      if (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
+        videos.push "youtube"
       pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
+      if (parseFloat(parseInt(pages["vimeo"])) == parseFloat(pages["vimeo"]))
+        videos.push "vimeo"
       pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
+      if (parseFloat(parseInt(pages["dailymotion"])) == parseFloat(pages["dailymotion"]))
+        videos.push "dailymotion"
       pages["popular_vines"] = ($('.results .source-vine').length)
+      if (parseFloat(parseInt(pages["popular_vines"]/10)) == parseFloat(pages["popular_vines"] /10))
+        videos.push "vine"
       pages["qwiki"] = ($('.results .source-qwiki').length)
+      if (parseFloat(parseInt(pages["qwiki"]/10)) == parseFloat(pages["qwiki"] /10))
+        videos.push "qwiki"
       pages["instagram"] = @instagramPage += 1
       $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
@@ -127,6 +138,9 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         if $(filter).hasClass("active")
           query_sources.push $(filter).attr("data-name")
       )
+      query_sources = query_sources.filter (n) ->
+          videos.indexOf(n) isnt -1
+      console.log query_sources
       @_getMoreVideos(query, query_sources, pages)
 
   _getMoreVideos: (query, query_sources,pages) ->
