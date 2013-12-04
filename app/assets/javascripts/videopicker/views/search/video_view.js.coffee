@@ -21,13 +21,15 @@ class Videopicker.Views.Search.VideoView extends Backbone.View
     $target = $(e.currentTarget)
     source = $target.parent().attr("data-source")
     videoId = $target.attr('data-id')
+    url = $target.attr('data-url')
     previewView = new Videopicker.Views.Preview.IndexView({
       videoId: videoId,
-      source: source
+      source: source,
+      url: url
     })
     $(".search").append(previewView.render().el)
     $(previewView.el).animate(
-      marginLeft: "-=449px"
+      marginLeft: "-=99%"
     , 400, ->
       $(".results").hide()
     )

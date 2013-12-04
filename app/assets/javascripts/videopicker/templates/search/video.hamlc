@@ -1,4 +1,4 @@
-%img{src: @image, data-id: @id}
+%img{src: @image, data-id: @id, data-url: @url}
 %p.title= @title
 -if @duration
   %span.duration= @duration

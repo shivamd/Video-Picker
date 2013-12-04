@@ -7,13 +7,15 @@ class Videopicker.Views.Preview.IndexView extends Backbone.View
 
   events:
     "click .back" : "cancel"
+    "click .get_url" : "geturl"
 
   initialize: (options) ->
     @videoId = options.videoId
     @source = options.source
+    @url = options.url
 
   render: =>
-    $(@el).html(@template({@videoId}))
+    $(@el).html(@template({videoId: @videoId, url: @url}))
     @renderSource(@videoId, @source)
     @
 
@@ -28,4 +30,7 @@ class Videopicker.Views.Preview.IndexView extends Backbone.View
     , 700, ->
       @remove()
     )
+
+  geturl: ->
+    @$(".url").stop().toggle( "blind", 500 )
 
