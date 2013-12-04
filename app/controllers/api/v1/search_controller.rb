@@ -16,7 +16,7 @@ module Api
             render json: videos, status: 200, query: params[:query] and return
           end
         end
-        render json: { query: params[:query], error: "Couldn't find video" } , status: 404
+        render json: { query: params[:query], error: "No Videos Found" } , status: 404
       end
 
       def vimeo
@@ -31,7 +31,7 @@ module Api
             render json: videos, status: 200, query: query and return
           end
         end
-        render json: { query: query, error: "Couldn't find video" }, status: 404
+        render json: { query: query, error: "No Videos Found" }, status: 404
       end
 
       def dailymotion
@@ -45,7 +45,7 @@ module Api
             render json: videos, status: 200, query: params[:query] and return
           end
         end
-        render json: { query: params[:query], error: "Couldn't find video"}, status: 404
+        render json: { query: params[:query], error: "No Videos Found"}, status: 404
       end
 
       def popular_vines
@@ -59,7 +59,7 @@ module Api
             render json: video_links, status: 200, query: params[:query] and return
           end
         end
-        render json: { query: params[:query], error: "Couldn't find video" }, status: 404
+        render json: { query: params[:query], error: "No Videos Found" }, status: 404
       end
 
       def recent_vines
@@ -70,7 +70,7 @@ module Api
             render json: video_links, status: 200, query: params[:query] and return
           end
         end
-        render json: { query: params[:query], error: "Couldn't find video" }, status: 404
+        render json: { query: params[:query], error: "No Videos Found" }, status: 404
       end
 
       def qwiki
@@ -83,7 +83,7 @@ module Api
             render json: videos, status: 200, query: params[:query] and return
           end
         end
-        render json: { query: params[:query], error: "Couldn't find video" }, status: 404
+        render json: { query: params[:query], error: "No Videos Found" }, status: 404
       end
 
       def instagram
@@ -92,7 +92,7 @@ module Api
           videos = videos.map { |video| format_instagram_video(video) }.compact
           render json: videos, status: 200, query: params[:query] and return
         end
-        render json: { query: params[:query], error: "Couldn't find video" }, status: 404
+        render json: { query: params[:query], error: "No Videos Found" }, status: 404
       end
 
       private
