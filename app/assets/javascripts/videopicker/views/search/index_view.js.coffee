@@ -7,6 +7,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   initialize: (options) ->
     @sources = options.sources
+    @instagramPage = 1
 
   events:
     "click .source" : "manageSource"
@@ -39,9 +40,11 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     @refreshResults()
 
   launchSearch: (e) ->
+    self= @
     e.preventDefault()
     $(".preview").remove()
     $(".results").show()
+    self.$(".loader").removeClass "hidden"
     query = $("input[name='search']").val()
     query_sources = []
     _.each(@$("li"), (filter) ->
@@ -68,8 +71,9 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       type: "get"
       url: "/api/search/#{query_source}"
       dataType: 'json'
-      data: {query: query}
+      data: {query: query, page: 1}
       success: (response, data) ->
+        self.$(".loader").addClass "hidden"
         newVideos = []
         _.each(response, (video) ->
           self.video = new Videopicker.Models.Video(video)
@@ -79,6 +83,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         self.sortVideos(newVideos)
 
   sortVideos: (newVideos) ->
+    self = @
     videos = _.sortBy(newVideos, (video) ->
       - video.get("accuracy")
     )
@@ -86,6 +91,8 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       view = new Videopicker.Views.Search.VideoView({model: video})
       @$(".results").append(view.render().el)
     , @)
+    $(".results").off("scroll").on "scroll", (e) ->
+      self.checkVideoScroll(e)
 
   refreshResults: ->
     _.each(@$(".results .video"), (videoDiv) ->
@@ -95,4 +102,73 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       else
         $(videoDiv).hide()
     , @)
+
+  checkVideoScroll: (e) ->
+    if @scrolledToBottom(e)
+      $("img.paginate").removeClass "hidden"
+      pageNumbers = @calculatePages()
+      pageableSources = @findPageableSources(pageNumbers)
+      $(e.currentTarget).off "scroll"
+      query = $("input[name='search']").val()
+      query_sources = []
+      _.each(@$("li"), (filter) ->
+        if $(filter).hasClass("active")
+          query_sources.push $(filter).attr("data-name")
+      )
+      query_sources = query_sources.filter (n) ->
+          pageableSources.indexOf(n) isnt -1
+      @_getMoreVideos(query, query_sources, pageNumbers)
+
+  scrolledToBottom: (e) ->
+    elem = $(e.currentTarget)
+    elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()
+
+  calculatePages: ->
+    pages = {}
+    pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+    pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
+    pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
+    pages["popular_vines"] = ($('.results .source-vine').length) / 10
+    pages["qwiki"] = ($('.results .source-qwiki').length) / 10
+    pages["instagram"] = @instagramPage += 1
+
+    pages
+
+  findPageableSources: (pages) ->
+    self = @
+    sources = ["youtube", "vimeo", "dailymotion", "popular_vines", "qwiki", "instagram"]
+    sources.map (source) -> self.isPageable(source, pages)
+
+  isPageable: (source,pages) ->
+    if (parseFloat(parseInt(pages[source])) == parseFloat(pages[source]))
+      if source is "popular_vines" then "vine" else source
+
+  _getMoreVideos: (query, query_sources,pages) ->
+    self = @
+    self.videos = new Videopicker.Collections.VideosCollection()
+    _.each(query_sources, (source) ->
+      self._moreVideos(query, source, pages)
+    , self)
+
+  _moreVideos: (query, source, pages) ->
+    self = @
+    query_source = if source == "vine"
+      "popular_vines"
+    else
+      source
+    $.ajax
+      type: "get"
+      url: "/api/search/#{query_source}"
+      dataType: 'json'
+      data: {query: query, pages: pages}
+      success: (response, data) ->
+        self.$(".loader").addClass "hidden"
+        newVideos = []
+        _.each(response, (video) ->
+          self.video = new Videopicker.Models.Video(video)
+          self.videos.add(self.video)
+          newVideos.push self.video
+        , self)
+        self.sortVideos(newVideos)
+        $("img.paginate").addClass "hidden"
 

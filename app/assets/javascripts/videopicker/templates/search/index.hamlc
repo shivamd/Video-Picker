@@ -12,4 +12,5 @@
     %input.button{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
     %input.button.submit{type: "submit", value: "Search!"}
 
+  %img{class: "loader hidden", src: "/assets/loader.gif" }
   .results

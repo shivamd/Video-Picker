@@ -2,13 +2,15 @@ module SearchHelper
 	include ActionView::Helpers::DateHelper
 	include ActionView::Helpers::NumberHelper
 
-  def get_youtube_videos(query)
+  def get_youtube_videos(params)
+    query = params[:query]
+    page = params[:pages]["youtube"] if params[:pages]
     client = YouTubeIt::Client.new
     begin
       if query.match(/(youtu)(be\.com|\.be)/)
         client.video_by(query)
       else
-        response =  client.videos_by(:query => query) if query.present?
+        response =  client.videos_by(:query => query, :page => page) if query.present?
       end
     rescue
       nil
@@ -33,14 +35,16 @@ module SearchHelper
   end
 
 
-  def get_vimeo_videos(query)
+  def get_vimeo_videos(params)
+    query = params[:query]
+    page = params[:pages]["vimeo"] if params[:pages]
     vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
     if query.present?
       if query.match(/vimeo\.com/)
         video_id = query.match(/vimeo\.com\/(\w*\/)*(\d+)/)[-1]
         response = Vimeo::Simple::Video.info(video_id).parsed_response
       else
-        response = vimeo.search(query, { :page => "1", :per_page => "25", :full_response => "1"})
+        response = vimeo.search(query, { :page => page || 1, :per_page => "25", :full_response => "1"})
       end
     end
   end
@@ -78,7 +82,9 @@ module SearchHelper
     }
   end
 
-  def get_dailymotion_videos(query)
+  def get_dailymotion_videos(params)
+    query = params[:query]
+    page = params[:pages]["dailymotion"] if params[:pages]
     begin
       if query.present?
         fields = "fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total"
@@ -86,7 +92,7 @@ module SearchHelper
           video_id = query.match(/video\/([^_]+)/)[-1]
           response = open("https://api.dailymotion.com/video/#{video_id}?#{fields}").read
         else
-          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}").read
+          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}&page=#{page || 1}").read
         end
         JSON.parse(response)
       end
@@ -112,12 +118,14 @@ module SearchHelper
     }
   end
 
-  def get_popular_vine_videos(query)
+  def get_popular_vine_videos(params)
+    query = params[:query]
+    start = params[:pages]["popular_vines"].to_i * 10 if params[:pages]
     begin
       return query.gsub(/http[s]?:\/\//, "") if query.match(/vine\.co/)
       if query.present?
         agent = Mechanize.new
-        page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}")
+        page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}&start=#{start || 0}")
         page.search('cite').children.map { |i| i.inner_text.gsub(/http[s]?:\/\//, "") }
       end
     rescue
@@ -169,14 +177,16 @@ module SearchHelper
   end
 
 
-  def get_qwiki_videos(query)
+  def get_qwiki_videos(params)
+    query = params[:query]
+    start = params[:pages]["qwiki"].to_i * 10 if params[:pages]
     begin
       if query.present?
         if query.match(/qwiki\.com/)
           format_qwiki_response(query)
         else
           agent = Mechanize.new
-          page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}")
+          page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}&start=#{start || 0}")
           page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
         end
       end
@@ -219,11 +229,19 @@ module SearchHelper
     end
   end
 
-  def get_instagram_videos(query)
+  def get_instagram_videos(params)
+    query = params[:query]
+    page = params[:pages]["instagram"] if params[:pages]
+    client_id = ENV["INSTAGRAM_CLIENT_ID"]
+    if page
+      url = session[:instagram_url]
+    else
+      url = "https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}"
+    end
     if query.present?
-      client_id = ENV["INSTAGRAM_CLIENT_ID"]
       agent = Mechanize.new
-      page = agent.get("https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}")
+      page = agent.get(url)
+      session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"]
       response = JSON.parse(page.body)["data"]
       response.select{ |media| media["videos"].present? }
     end
@@ -233,10 +251,10 @@ module SearchHelper
     white = Text::WhiteSimilarity.new
     thumbnail = video["images"]["thumbnail"]["url"]
     duration = nil
-    user_name = video["caption"]["from"]["username"]
+    user_name = video["caption"]["from"]["username"] if video["caption"]
     title = "#{user_name}'s video"
-    description = video["caption"]["text"]
-    date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s"))
+    description = video["caption"]["text"] if video["caption"]
+    date = time_ago_in_words(DateTime.strptime(video["caption"]["created_time"], "%s")) if video["caption"]
     view_count = video["likes"]["count"]
     source =video["videos"]["standard_resolution"]["url"]
     video = video["link"]

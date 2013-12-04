@@ -6,7 +6,7 @@ module Api
       include SearchHelper
 
       def youtube
-        response = get_youtube_videos(params[:query])
+        response = get_youtube_videos(params)
         if response
           if params[:query].match(/(youtu)(be\.com|\.be)/)
             video = format_youtube_response(response)
@@ -21,7 +21,7 @@ module Api
 
       def vimeo
         query = params[:query]
-        response = get_vimeo_videos(query)
+        response = get_vimeo_videos(params)
         if response
           if query.match(/vimeo\.com/)
             video = format_single_vimeo_response(response.first)
@@ -35,7 +35,7 @@ module Api
       end
 
       def dailymotion
-        response = get_dailymotion_videos(params[:query])
+        response = get_dailymotion_videos(params)
         if response
           if params[:query].match(/dailymotion\.com/)
             video = format_dailymotion_response(response)
@@ -49,7 +49,7 @@ module Api
       end
 
       def popular_vines
-        video_links = get_popular_vine_videos(params[:query])
+        video_links = get_popular_vine_videos(params)
         if video_links.present?
           if params[:query].match(/vine\.co/)
             video = format_vine_response(video_links)
@@ -74,7 +74,7 @@ module Api
       end
 
       def qwiki
-        response = get_qwiki_videos(params[:query])
+        response = get_qwiki_videos(params)
         if response.present?
           if params[:query].match(/qwiki\.com/)
             render json: response, status: 200, query: params[:query] and return
@@ -87,7 +87,7 @@ module Api
       end
 
       def instagram
-        videos = get_instagram_videos(params[:query])
+        videos = get_instagram_videos(params)
         if response.present?
           videos = videos.map { |video| format_instagram_video(video, params[:query]) }.compact
           render json: videos, status: 200, query: params[:query] and return
