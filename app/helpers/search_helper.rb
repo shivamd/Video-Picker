@@ -112,7 +112,7 @@ module SearchHelper
 
   def get_popular_vine_videos(params)
     query = params[:query]
-    start = params[:pages]["popular_vines"] if params[:pages]
+    start = params[:pages]["popular_vines"].to_i * 10 if params[:pages]
     begin
       return query.gsub(/http[s]?:\/\//, "") if query.match(/vine\.co/)
       if query.present?
@@ -169,7 +169,7 @@ module SearchHelper
 
   def get_qwiki_videos(params)
     query = params[:query]
-    start = params[:pages]["qwiki"] if params[:pages]
+    start = params[:pages]["qwiki"].to_i * 10 if params[:pages]
     begin
       if query.present?
         if query.match(/qwiki\.com/)
