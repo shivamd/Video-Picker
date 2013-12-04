@@ -6,4 +6,5 @@ class Videopicker.Routers.SearchRouter extends Backbone.Router
   index: ->
     @view = new Videopicker.Views.Search.IndexView({sources: ["youtube", "vimeo", "dailymotion", "vine", "instagram", "qwiki"]})
     $(".container").html(@view.render().el)
+    $(".container").append "<img class='paginate hidden' src='/assets/loader.gif'>"
 
