@@ -110,27 +110,9 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     , @)
 
   checkVideoScroll: (e) ->
-    elem = $(e.currentTarget)
-    pages = {}
-
-    if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) #and (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
-      videos = []
-      pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
-      if (parseFloat(parseInt(pages["youtube"])) == parseFloat(pages["youtube"]))
-        videos.push "youtube"
-      pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
-      if (parseFloat(parseInt(pages["vimeo"])) == parseFloat(pages["vimeo"]))
-        videos.push "vimeo"
-      pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
-      if (parseFloat(parseInt(pages["dailymotion"])) == parseFloat(pages["dailymotion"]))
-        videos.push "dailymotion"
-      pages["popular_vines"] = ($('.results .source-vine').length)
-      if (parseFloat(parseInt(pages["popular_vines"]/10)) == parseFloat(pages["popular_vines"] /10))
-        videos.push "vine"
-      pages["qwiki"] = ($('.results .source-qwiki').length)
-      if (parseFloat(parseInt(pages["qwiki"]/10)) == parseFloat(pages["qwiki"] /10))
-        videos.push "qwiki"
-      pages["instagram"] = @instagramPage += 1
+    if @scrolledToBottom(e)
+      pageNumbers = @calculatePages()
+      pageableSources = @findPageableSources(pageNumbers)
       $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
       query_sources = []
@@ -139,9 +121,32 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
           query_sources.push $(filter).attr("data-name")
       )
       query_sources = query_sources.filter (n) ->
-          videos.indexOf(n) isnt -1
-      console.log query_sources
-      @_getMoreVideos(query, query_sources, pages)
+          pageableSources.indexOf(n) isnt -1
+      @_getMoreVideos(query, query_sources, pageNumbers)
+
+  scrolledToBottom: (e) ->
+    elem = $(e.currentTarget)
+    elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()
+
+  calculatePages: ->
+    pages = {}
+    pages["youtube"] = ($('.results .source-youtube').length) / 25 + 1
+    pages["vimeo"] = ($('.results .source-vimeo').length) / 25 + 1
+    pages["dailymotion"] = ($('.results .source-dailymotion').length) / 25 + 1
+    pages["popular_vines"] = ($('.results .source-vine').length) / 10
+    pages["qwiki"] = ($('.results .source-qwiki').length) / 10
+    pages["instagram"] = @instagramPage += 1
+
+    pages
+
+  findPageableSources: (pages) ->
+    self = @
+    sources = ["youtube", "vimeo", "dailymotion", "popular_vines", "qwiki", "instagram"]
+    sources.map (source) -> self.isPageable(source, pages)
+
+  isPageable: (source,pages) ->
+    if (parseFloat(parseInt(pages[source])) == parseFloat(pages[source]))
+      if source is "popular_vines" then "vine" else source
 
   _getMoreVideos: (query, query_sources,pages) ->
     self = @
