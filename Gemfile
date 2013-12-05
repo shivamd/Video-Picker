@@ -43,3 +43,6 @@ gem 'twitter'
 gem 'instagram'
 #Scraping tools
 gem 'mechanize'
+
+#new relic gem for 100% up time
+gem 'newrelic_rpm'
