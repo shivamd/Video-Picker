@@ -15,6 +15,20 @@
     border-right:  1px solid lighten($dim-text, 20)
     margin-right: -1px
     +box-shadow(rgba(0, 0, 0, 0.1) 0 0 3px inset)
+    .logo
+      background: $background
+      border-bottom: 1px solid lighten($dim-text, 20)
+      img,
+      .text
+        opacity: 0.9
+        display: inline-block
+        height: 100px
+        vertical-align: middle
+        margin: 10px 10px
+        p
+          font-size: 30px
+          line-height: 50px
+          margin: 0
     ul
       width: 100%
       overflow: auto
@@ -30,9 +44,12 @@
         &.active
           background: $background
         &.inactive
+          +grayfilter(100%)
           p
             +text-shadow($white-a3 1px 1px 0)
             color: lighten($dim-text, 20)
+          &:hover
+            +grayfilter(0%)
           &:before
             opacity: 0.2
         &:hover
@@ -43,13 +60,10 @@
         &.dailymotion,
         &.instagram,
         &.qwiki
-          +grayfilter(100%)
           +transition(all .3s ease)
           p
             display: inline-block
             margin: 0
-          &:hover
-            +grayfilter(0%)
           &:before
             font-size: 25px
             width: 25px
@@ -61,12 +75,10 @@
         &.youtube
           &:before
             content: "\f167"
-          &:hover:before
             color: $youtube-color
         &.instagram
           &:before
             content: "\f16d"
-          &:hover:before
             color: $instagram-color
         &.vimeo
           &:before
@@ -174,5 +186,6 @@
     .loader
       margin-top: 80px
 .paginate
-  margin-left: 160px
+  margin-left: 12.5%
+  margin-bottom: 100px
 
