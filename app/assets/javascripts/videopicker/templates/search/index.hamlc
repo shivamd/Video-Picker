@@ -1,4 +1,9 @@
 .sources
+  .logo
+    %img{ src: "/assets/panda_100.png" }
+    .text
+      %p Videos
+      %p Bamboozle
   %fieldset
     %legend Filters
     %ul
@@ -12,5 +17,7 @@
     %input.button{type: "text", name: "search", placeholder: "Search videos", autofocus: true}
     %input.button.submit{type: "submit", value: "Search!"}
 
-  %img{class: "loader hidden", src: "/assets/loader.gif" }
+  %img{class: "loader hidden", src: "/assets/panda.gif" }
   .results
+
+%img{ class: 'paginate hidden', src: '/assets/panda.gif' }
