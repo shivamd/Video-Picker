@@ -2,7 +2,7 @@
   .logo
     %img{ src: "/assets/panda_100.png" }
     .text
-      %p Videos
+      %p Video
       %p Bamboozle
   %fieldset
     %legend Filters
