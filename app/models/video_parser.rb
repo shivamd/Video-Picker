@@ -87,6 +87,6 @@ class VideoParser
   private
 
     def sanitize_sources
-      @params[:sources].select{ |source| SOURCES.include?(source) } if @params[:sources]
+      @params[:sources].split(",").select{ |source| SOURCES.include?(source) } if @params[:sources]
     end
 end
