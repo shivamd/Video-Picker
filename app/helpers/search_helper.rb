@@ -14,7 +14,6 @@ module SearchHelper
   end
 
   def format_youtube_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video.thumbnails[1].url,
       duration: Time.at(video.duration).utc.strftime("%H:%M:%S"),
@@ -41,7 +40,6 @@ module SearchHelper
   end
 
   def format_single_vimeo_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnail_medium"] ,
       duration: video["duration"],
@@ -57,7 +55,6 @@ module SearchHelper
   end
 
   def format_vimeo_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnails"]["thumbnail"][1]["_content"].sub("b.","a."), #the b vimeo cdn doesn't work, need to manually chane that
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -88,7 +85,6 @@ module SearchHelper
   end
 
   def format_dailymotion_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnail_240_url"],
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -134,7 +130,6 @@ module SearchHelper
   end
 
   def format_vine_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -177,7 +172,6 @@ module SearchHelper
   end
 
   def format_qwiki_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -229,7 +223,6 @@ module SearchHelper
   end
 
   def format_instagram_video(video, query = nil)
-    white = Text::WhiteSimilarity.new
     thumbnail = video["images"]["thumbnail"]["url"]
     duration = nil
     user_name = video["caption"]["from"]["username"] if video["caption"]
@@ -252,6 +245,10 @@ module SearchHelper
       source: "instagram",
       accuracy: white.similarity(title, query)
     }
+  end
+
+  def white
+    Text::WhiteSimilarity.new
   end
 
 end
