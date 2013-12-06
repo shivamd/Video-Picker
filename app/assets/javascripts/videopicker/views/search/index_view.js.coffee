@@ -63,23 +63,22 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   _getVideos: (query, source) ->
     self = @
-    query_source = if source == "vine"
-      "popular_vines"
-    else
-      source
+    self.source = source
     $.ajax
       type: "get"
-      url: "/api/search/#{query_source}"
+      url: "/api/search/videos"
       dataType: 'json'
-      data: {query: query, page: 1}
+      data: { query: query, page: 1, sources: [source] }
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
-        _.each(response, (video) ->
+        source = Object.keys(response)[0]
+        _.each(response[source], (video) ->
           self.video = new Videopicker.Models.Video(video)
           self.videos.add(self.video)
           newVideos.push self.video
         , self)
+        console.log newVideos
         self.sortVideos(newVideos)
 
   sortVideos: (newVideos) ->
@@ -152,19 +151,17 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   _moreVideos: (query, source, pages) ->
     self = @
-    query_source = if source == "vine"
-      "popular_vines"
-    else
-      source
+    self.source = source
     $.ajax
       type: "get"
-      url: "/api/search/#{query_source}"
+      url: "/api/search/videos"
       dataType: 'json'
-      data: {query: query, pages: pages}
+      data: {query: query, pages: pages, sources: [source] }
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
-        _.each(response, (video) ->
+        source = Object.keys(response)[0]
+        _.each(response[source], (video) ->
           self.video = new Videopicker.Models.Video(video)
           self.videos.add(self.video)
           newVideos.push self.video
