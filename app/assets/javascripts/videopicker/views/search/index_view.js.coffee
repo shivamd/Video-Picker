@@ -68,7 +68,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       type: "get"
       url: "/api/search/videos"
       dataType: 'json'
-      data: { query: query, page: 1, sources: [source] }
+      data: { query: query, page: 1, sources: source }
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
@@ -156,7 +156,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       type: "get"
       url: "/api/search/videos"
       dataType: 'json'
-      data: {query: query, pages: pages, sources: [source] }
+      data: {query: query, pages: pages, sources: source }
       success: (response, data) ->
         self.$(".loader").addClass "hidden"
         newVideos = []
