@@ -105,10 +105,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   checkVideoScroll: (e) ->
     if @scrolledToBottom(e)
+      $(e.currentTarget).off "scroll"
       $("img.paginate").removeClass "hidden"
       pageNumbers = @calculatePages()
       pageableSources = @findPageableSources(pageNumbers)
-      $(e.currentTarget).off "scroll"
       query = $("input[name='search']").val()
       query_sources = []
       _.each(@$("li"), (filter) ->
@@ -121,7 +121,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
 
   scrolledToBottom: (e) ->
     elem = $(e.currentTarget)
-    elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()
+    elem[0].scrollHeight - elem.scrollTop() == (elem.outerHeight() + 1)
 
   calculatePages: ->
     pages = {}
