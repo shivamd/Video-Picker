@@ -38,7 +38,7 @@ class VideoParser
       dailymotion: dailymotion,
       vine: vine,
       instagram: instagram,
-      qwiki: qwiki_videos
+      qwiki: qwiki
     }
   end
 
@@ -79,8 +79,8 @@ class VideoParser
 
   def instagram
     videos = get_instagram_videos(@params)
-    if response.present?
-      videos = videos.map { |video| format_instagram_video(video, @query) }.compact
+    if videos.present?
+      videos.map { |video| format_instagram_video(video, @query) }.compact
     end
   end
 
