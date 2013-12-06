@@ -1,17 +1,29 @@
-<h2>Sign in</h2>
+<%= render "devise/shared/header" %>
 
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
+<div id="sign-in">
+  <h1>Sign in</h1>
 
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
 
-  <% if devise_mapping.rememberable? -%>
-    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
-  <% end -%>
+    <div>
+      <div class="label">Email</div>
+      <%= f.email_field :email, :autofocus => true, class: 'button' %>
+    </div>
 
-  <div><%= f.submit "Sign in" %></div>
-<% end %>
+    <div>
+      <div class="label">Password</div>
+      <%= f.password_field :password, class: 'button'  %>
+    </div>
 
+    <% if devise_mapping.rememberable? -%>
+      <div>
+        <div class="label">Remember me</div>
+        <%= f.check_box :remember_me, class: 'button' %>
+      </div>
+    <% end -%>
+
+    <div><%= f.submit "Sign in", class: 'button submit' %></div>
+  <% end %>
+
+</div>
 <%= render "devise/shared/links" %>
