@@ -68,7 +68,7 @@ module SearchHelper
   def format_vimeo_response(video, query = nil)
     white = Text::WhiteSimilarity.new
     {
-      image: video["thumbnails"]["thumbnail"][1]["_content"],
+      image: video["thumbnails"]["thumbnail"][1]["_content"].sub("b.","a."), #the b vimeo cdn doesn't work, need to manually chane that
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
       title: video["title"],
       user_name: video["owner"]["display_name"],
