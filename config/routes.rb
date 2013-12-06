@@ -9,12 +9,6 @@ Videopicker::Application.routes.draw do
     #default should always be last.
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       namespace :search do
-        get "youtube"
-        get "vimeo"
-        get "dailymotion"
-        get "vine"
-        get "qwiki"
-        get "instagram"
         get "videos"
       end
     end
