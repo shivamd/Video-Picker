@@ -1,15 +1,22 @@
 class VideoParser
   include SearchHelper
+  SOURCES = %w(
+    youtube
+    vimeo
+    dailymotion
+    vine
+    instagram
+    qwiki
+  )
 
   def initialize(options)
     @params = options
     @query = options[:query]
-    @pages = options[:pages]
-    @fields = options[:fields]
+    @sources = sanitize_sources
   end
 
   def parse
-    if @fields.present?
+    if @sources.present?
       filter_videos
     else
       all_videos
@@ -18,8 +25,8 @@ class VideoParser
 
   def filter_videos
     videos = {}
-    @fields.each do |field|
-      videos[field.to_sym] = send(field)
+    @sources.each do |source|
+      videos[source.to_sym] = send(source)
     end
     videos
   end
@@ -76,4 +83,10 @@ class VideoParser
       videos = videos.map { |video| format_instagram_video(video, @query) }.compact
     end
   end
+
+  private
+
+    def sanitize_sources
+      @params[:sources].select{ |source| SOURCES.include?(source) } if @params[:sources]
+    end
 end
