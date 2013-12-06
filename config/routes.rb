@@ -16,6 +16,7 @@ Videopicker::Application.routes.draw do
         get "recent_vines"
         get "qwiki"
         get "instagram"
+        get "videos"
       end
     end
   end
