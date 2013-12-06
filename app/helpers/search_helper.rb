@@ -1,24 +1,19 @@
 module SearchHelper
-	include ActionView::Helpers::DateHelper
-	include ActionView::Helpers::NumberHelper
+  include ActionView::Helpers::DateHelper
+  include ActionView::Helpers::NumberHelper
 
   def get_youtube_videos(params)
     query = params[:query]
     page = params[:pages]["youtube"] if params[:pages]
     client = YouTubeIt::Client.new
     begin
-      if query.match(/(youtu)(be\.com|\.be)/)
-        client.video_by(query)
-      else
-        response =  client.videos_by(:query => query, :page => page) if query.present?
-      end
+      response =  client.videos_by(:query => query, :page => page) if query.present?
     rescue
       nil
     end
   end
 
   def format_youtube_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video.thumbnails[1].url,
       duration: Time.at(video.duration).utc.strftime("%H:%M:%S"),
@@ -31,7 +26,7 @@ module SearchHelper
       url: video.player_url,
       source: "youtube",
       accuracy: white.similarity(video.title, query)
-     }
+    }
   end
 
 
@@ -40,33 +35,26 @@ module SearchHelper
     page = params[:pages]["vimeo"] if params[:pages]
     vimeo = Vimeo::Advanced::Video.new(ENV["VIMEO_CONSUMER_KEY"],ENV["VIMEO_CONSUMER_SECRET"],token: ENV["VIMEO_ACCESS_TOKEN"], secret: ENV["VIMEO_ACCESS_SECRET"])
     if query.present?
-      if query.match(/vimeo\.com/)
-        video_id = query.match(/vimeo\.com\/(\w*\/)*(\d+)/)[-1]
-        response = Vimeo::Simple::Video.info(video_id).parsed_response
-      else
-        response = vimeo.search(query, { :page => page || 1, :per_page => "25", :full_response => "1"})
-      end
+      response = vimeo.search(query, { :page => page || 1, :per_page => "25", :full_response => "1"})
     end
   end
 
   def format_single_vimeo_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
-     image: video["thumbnail_medium"] ,
-     duration: video["duration"],
-     title: video["title"],
-     user_name: video["user_name"],
-     date: video["upload_date"],
-     view_count: video["stats_number_of_plays"],
-     description: video["description"],
-     id: video["id"],
-     url: video["url"],
+      image: video["thumbnail_medium"] ,
+      duration: video["duration"],
+      title: video["title"],
+      user_name: video["user_name"],
+      date: video["upload_date"],
+      view_count: video["stats_number_of_plays"],
+      description: video["description"],
+      id: video["id"],
+      url: video["url"],
       accuracy: white.similarity(video["title"], query)
     }
   end
 
   def format_vimeo_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnails"]["thumbnail"][1]["_content"].sub("b.","a."), #the b vimeo cdn doesn't work, need to manually chane that
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -88,12 +76,7 @@ module SearchHelper
     begin
       if query.present?
         fields = "fields=created_time,title,id,description,duration,thumbnail_240_url,owner,url,views_total"
-        if query.match(/dailymotion\.com/)
-          video_id = query.match(/video\/([^_]+)/)[-1]
-          response = open("https://api.dailymotion.com/video/#{video_id}?#{fields}").read
-        else
-          response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}&page=#{page || 1}").read
-        end
+        response = open("https://api.dailymotion.com/videos?search=#{query}&limit=25&#{fields}&page=#{page || 1}").read
         JSON.parse(response)
       end
     rescue
@@ -102,7 +85,6 @@ module SearchHelper
   end
 
   def format_dailymotion_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     {
       image: video["thumbnail_240_url"],
       duration: Time.at((video["duration"] ? video["duration"].to_i : 0)).utc.strftime("%H:%M:%S"),
@@ -122,7 +104,6 @@ module SearchHelper
     query = params[:query]
     start = params[:pages]["popular_vines"].to_i * 10 if params[:pages]
     begin
-      return query.gsub(/http[s]?:\/\//, "") if query.match(/vine\.co/)
       if query.present?
         agent = Mechanize.new
         page = agent.get("https://google.com/search?q=site%3Avine.co%20%23#{query}&start=#{start || 0}")
@@ -149,7 +130,6 @@ module SearchHelper
   end
 
   def format_vine_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -182,13 +162,9 @@ module SearchHelper
     start = params[:pages]["qwiki"].to_i * 10 if params[:pages]
     begin
       if query.present?
-        if query.match(/qwiki\.com/)
-          format_qwiki_response(query)
-        else
-          agent = Mechanize.new
-          page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}&start=#{start || 0}")
-          page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
-        end
+        agent = Mechanize.new
+        page = agent.get("https://google.com/search?q=site%3Aqwiki.com%20%23#{query}&start=#{start || 0}")
+        page.search('cite').children.map { |i| i.inner_text.gsub("https://", "") }
       end
     rescue
       nil
@@ -196,7 +172,6 @@ module SearchHelper
   end
 
   def format_qwiki_response(video, query = nil)
-    white = Text::WhiteSimilarity.new
     begin
       agent = Mechanize.new
       page = agent.get("http://" + video)
@@ -234,21 +209,20 @@ module SearchHelper
     page = params[:pages]["instagram"] if params[:pages]
     client_id = ENV["INSTAGRAM_CLIENT_ID"]
     if page
-      url = session[:instagram_url]
+      url = nil #session[:instagram_url] if defined?(session)
     else
       url = "https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}"
     end
     if query.present?
       agent = Mechanize.new
       page = agent.get(url)
-      session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"]
+      # session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"] if defined?(session)
       response = JSON.parse(page.body)["data"]
       response.select{ |media| media["videos"].present? }
     end
   end
 
   def format_instagram_video(video, query = nil)
-    white = Text::WhiteSimilarity.new
     thumbnail = video["images"]["thumbnail"]["url"]
     duration = nil
     user_name = video["caption"]["from"]["username"] if video["caption"]
@@ -271,6 +245,10 @@ module SearchHelper
       source: "instagram",
       accuracy: white.similarity(title, query)
     }
+  end
+
+  def white
+    Text::WhiteSimilarity.new
   end
 
 end
