@@ -1,6 +1,9 @@
 Videopicker::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  #Google analytics
+  GA.tracker = "UA-46253793-1"
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

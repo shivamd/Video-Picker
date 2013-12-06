@@ -75,6 +75,7 @@ GEM
       faraday (>= 0.7.4, < 0.9)
     font-awesome-rails (3.2.1.3)
       railties (>= 3.2, < 5.0)
+    google-analytics-rails (0.0.4)
     haml_coffee_assets (1.14.1)
       coffee-script (>= 1.0.0)
       sprockets (>= 2.0.3)
@@ -252,6 +253,7 @@ DEPENDENCIES
   debugger
   devise
   font-awesome-rails
+  google-analytics-rails
   haml_coffee_assets
   instagram
   jasmine-rails

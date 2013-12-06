@@ -46,3 +46,6 @@ gem 'mechanize'
 
 #new relic gem for 100% up time
 gem 'newrelic_rpm'
+
+# Analytics
+gem 'google-analytics-rails'
