@@ -6,5 +6,9 @@
         <p>Bamboozle</p>
       </div>
       <a href="/" class="button click">Back</a>
+      <% if current_user %>
+        <%= link_to "Edit", edit_user_registration_path, class: "button click" %>
+        <%= link_to "Logout",destroy_user_session_path, method: :delete, class: "button click" %>
+      <% end %>
     </div>
 </div>
