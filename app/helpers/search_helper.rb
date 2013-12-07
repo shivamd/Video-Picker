@@ -209,14 +209,14 @@ module SearchHelper
     page = params[:pages]["instagram"] if params[:pages]
     client_id = ENV["INSTAGRAM_CLIENT_ID"]
     if page
-      url = nil #session[:instagram_url] if defined?(session)
+      url = session[:instagram_url]
     else
       url = "https://api.instagram.com/v1/tags/#{query.gsub(" ", "")}/media/recent?client_id=#{client_id}"
     end
     if query.present?
       agent = Mechanize.new
       page = agent.get(url)
-      # session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"] if defined?(session)
+      session[:instagram_url] = JSON.parse(page.body)["pagination"]["next_url"]
       response = JSON.parse(page.body)["data"]
       response.select{ |media| media["videos"].present? }
     end
