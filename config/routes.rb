@@ -17,4 +17,6 @@ Videopicker::Application.routes.draw do
   resources :applications, only: [:new, :index, :create]
 
   mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
+
+  get "*missing" => redirect("/")
 end
