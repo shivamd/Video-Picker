@@ -236,7 +236,7 @@ module SearchHelper
     if page
       url = session[:instagram_url]
     else
-      url = "https://api.instagram.com/v1/tags/#{query}/media/recent?client_id=#{client_id}"
+      url = "https://api.instagram.com/v1/tags/#{query.gsub(" ", "")}/media/recent?client_id=#{client_id}"
     end
     if query.present?
       agent = Mechanize.new
