@@ -1,6 +1,6 @@
 <div id="user-nav">
   <% if user_signed_in? %>
-    <%= link_to 'Configure my API access', edit_user_registration_path, class: 'button click' %>
+    <%= link_to 'Configure my API access', new_application_path, class: 'button click' %>
   <% else %>
     <%= link_to "Get API access", new_user_registration_path, class: 'button click'  %>
   <% end %>
