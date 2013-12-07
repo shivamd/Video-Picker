@@ -1,4 +1,12 @@
-<%= form_for @application do |f| %>
-  <%= f.text_field :name, placeholder: "name" %>
-  <%= f.submit "Create Application" %>
-<% end %>
+<%= render "devise/shared/header" %>
+
+<div id="new-application">
+  <h1>Add an application</h1>
+  <%= form_for @application do |f| %>
+    <div>
+      <div class="label">Name</div>
+      <%= f.text_field :name, placeholder: "name", class: "button" %>
+    </div>
+    <div><%= f.submit "Create Application", class: "button" %></div>
+  <% end %>
+</div>
