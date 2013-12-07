@@ -16,8 +16,9 @@
     <% end %>
 
     <div>
-      <div class="label">Password <i>(leave blank if you don't want to change it)</i></div>
+      <div class="label">Password </div>
       <%= f.password_field :password, :autocomplete => "off", class: 'button' %>
+      <i>(leave blank if you don't want to change it)</i>
     </div>
 
     <div>
@@ -29,6 +30,4 @@
   <% end %>
 
   <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, class: 'button submit' %>
-
-  <%= link_to "Back", :back %>
 </div>
