@@ -86,6 +86,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         self.handleEndSearch(numberOfRequests)
         self.sortVideos(newVideos)
         self.sortVideos(newVideos)
+      error: ->
+        self.searchProgress += 1
+        self.handleEndSearch(numberOfRequests)
+
 
   sortVideos: (newVideos) ->
     self = @
