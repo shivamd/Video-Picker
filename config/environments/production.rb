@@ -5,7 +5,7 @@ Videopicker::Application.configure do
   GA.tracker = "UA-46253793-1"
 
   #Detailed logging
-  config.log_level = :debug #ENV['LOG_LEVEL'] ? ENV['LOG_LEVEL'].to_sym : ('info').to_sym
+  config.log_level = :info #ENV['LOG_LEVEL'] ? ENV['LOG_LEVEL'].to_sym : ('info').to_sym
 
   # Code is not reloaded between requests.
   config.cache_classes = true
