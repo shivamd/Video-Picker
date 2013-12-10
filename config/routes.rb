@@ -2,7 +2,7 @@ require 'api_constraints'
 
 Videopicker::Application.routes.draw do
 
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => "registrations" }
   root :to => 'home#index'
 
   namespace :api do
@@ -17,4 +17,6 @@ Videopicker::Application.routes.draw do
   resources :applications, only: [:new, :index, :create]
 
   mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
+
+  get "*missing" => redirect("/")
 end
