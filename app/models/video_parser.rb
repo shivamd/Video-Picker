@@ -28,6 +28,7 @@ class VideoParser
     @sources.each do |source|
       videos[source.to_sym] = send(source)
     end
+    videos[:pagination][:next] = pagination_url.html_safe
     videos
   end
 
@@ -38,49 +39,72 @@ class VideoParser
       dailymotion: dailymotion,
       vine: vine,
       instagram: instagram,
-      qwiki: qwiki
+      qwiki: qwiki,
+      pagination: {
+        next: pagination_url.html_safe
+      }
     }
+  end
+
+  def pagination_url
+    if @sources.present?
+      "/api/search/videos?query=#{@query}&sources=#{@sources}&#{pages_query}&access_token=#{@params['access_token']}"
+    else
+      "/api/search/videos?query=#{@query}&#{pages_query}&access_token=#{@params['access_token']}"
+    end
+  end
+
+  def pages_query
+    calculate_pages.gsub("[", "%5b").gsub("]", "%5d")
+  end
+
+  def calculate_pages
+    youtube = @youtube.count/25 + 1
+    vimeo = @vimeo.count/25 + 1
+    dailymotion = @dailymotion.count/25 + 1
+    vine = @vine.count/10
+    "pages[youtube]=#{youtube}&pages[vimeo]=#{vimeo}&pages[dailymotion]=#{dailymotion}&=pages[vine]=#{vine}"
   end
 
   def youtube
     response = get_youtube_videos(@params)
     if response
-      response.videos.map{ |video| format_youtube_response(video, @query) }.compact
+      @youtube = response.videos.map{ |video| format_youtube_response(video, @query) }.compact
     end
   end
 
   def vimeo
     response = get_vimeo_videos(@params)
     if response
-     response["videos"]["video"].map { |video| format_vimeo_response(video, @query) }.compact
+     @vimeo = response["videos"]["video"].map { |video| format_vimeo_response(video, @query) }.compact
     end
   end
 
   def dailymotion
     response = get_dailymotion_videos(@params)
     if response
-      response["list"].map{ |video| format_dailymotion_response(video, @query) }.compact
+      @dailymotion = response["list"].map{ |video| format_dailymotion_response(video, @query) }.compact
     end
   end
 
   def vine
     video_links = get_popular_vine_videos(@params)
     if video_links.present?
-      video_links.map!{ |video| format_vine_response(video, @query) }.compact
+      @vine = video_links.map!{ |video| format_vine_response(video, @query) }.compact
     end
   end
 
   def qwiki
     response = get_qwiki_videos(@params)
     if response.present?
-      response.map{ |video| format_qwiki_response(video, @query) }.compact
+      @qwiki = response.map{ |video| format_qwiki_response(video, @query) }.compact
     end
   end
 
   def instagram
     videos = get_instagram_videos(@params)
     if videos.present?
-      videos.map { |video| format_instagram_video(video, @query) }.compact
+      @instagram = videos.map { |video| format_instagram_video(video, @query) }.compact
     end
   end
 
