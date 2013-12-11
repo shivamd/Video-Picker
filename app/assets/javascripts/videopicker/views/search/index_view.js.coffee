@@ -44,6 +44,7 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
     e.preventDefault()
     $(".preview").remove()
     $(".results").show()
+    $(".no-result").hide()
     self.$(".loader").removeClass "hidden"
     query = $("input[name='search']").val()
     query_sources = []
@@ -56,12 +57,14 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
   _getAllVideos: (query, query_sources) ->
     self = @
     self.videos = new Videopicker.Collections.VideosCollection()
+    self.searchProgress = 0
     self.$(".results").html("")
     _.each(query_sources, (source) ->
-      self._getVideos(query, source)
+      self._getVideos(query, source, query_sources.length)
     , self)
 
-  _getVideos: (query, source) ->
+
+  _getVideos: (query, source, numberOfRequests) ->
     self = @
     self.source = source
     $.ajax
@@ -70,7 +73,6 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
       dataType: 'json'
       data: { query: query, page: 1, sources: source }
       success: (response, data) ->
-        self.$(".loader").addClass "hidden"
         newVideos = []
         source = Object.keys(response)[0]
         _.each(response[source], (video) ->
@@ -78,8 +80,16 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
           self.videos.add(self.video)
           newVideos.push self.video
         , self)
-        console.log newVideos
+        unless newVideos.length == 0
+          self.$(".loader").addClass "hidden"
+        self.searchProgress += 1
+        self.handleEndSearch(numberOfRequests)
         self.sortVideos(newVideos)
+        self.sortVideos(newVideos)
+      error: ->
+        self.searchProgress += 1
+        self.handleEndSearch(numberOfRequests)
+
 
   sortVideos: (newVideos) ->
     self = @
@@ -168,4 +178,10 @@ class Videopicker.Views.Search.IndexView extends Backbone.View
         , self)
         self.sortVideos(newVideos)
         $("img.paginate").addClass "hidden"
+
+  handleEndSearch: (numberOfRequests) ->
+    self = @
+    if numberOfRequests == self.searchProgress && self.videos.isEmpty?
+      $(".loader").addClass "hidden"
+      $(".no-result").show()
 

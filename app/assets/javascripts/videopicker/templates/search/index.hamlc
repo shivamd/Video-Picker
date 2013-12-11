@@ -19,5 +19,7 @@
 
   %img{class: "loader hidden", src: "/assets/panda.gif" }
   .results
+  .no-result
+    No results for this search
 
 %img{ class: 'paginate hidden', src: '/assets/panda.gif' }
