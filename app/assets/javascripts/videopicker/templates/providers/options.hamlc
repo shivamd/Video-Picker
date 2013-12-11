@@ -1,4 +1,4 @@
 .options
 	%button.button.back.submit Back
   %button.button.get_url.submit{ data-id: "#{@videoId}"} Get url
-  .url= @url
+.url= @url
