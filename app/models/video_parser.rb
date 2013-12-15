@@ -28,6 +28,7 @@ class VideoParser
     @sources.each do |source|
       videos[source.to_sym] = send(source)
     end
+    videos[:pagination] = {}
     videos[:pagination][:next] = pagination_url.html_safe
     videos
   end
@@ -41,7 +42,7 @@ class VideoParser
       instagram: instagram,
       qwiki: qwiki,
       pagination: {
-        next: pagination_url.html_safe
+        next: "http://videobamboozle.com" + pagination_url.html_safe
       }
     }
   end
@@ -55,15 +56,27 @@ class VideoParser
   end
 
   def pages_query
-    calculate_pages.gsub("[", "%5b").gsub("]", "%5d")
+    unless @params[:pages]
+      calculate_pages.gsub("[", "%5b").gsub("]", "%5d")
+    else
+      increment_pages.gsub("[", "%5b").gsub("]", "%5d")
+    end
   end
 
   def calculate_pages
-    youtube = @youtube.count/25 + 1
-    vimeo = @vimeo.count/25 + 1
-    dailymotion = @dailymotion.count/25 + 1
-    vine = @vine.count/10
-    "pages[youtube]=#{youtube}&pages[vimeo]=#{vimeo}&pages[dailymotion]=#{dailymotion}&=pages[vine]=#{vine}"
+    youtube = @youtube.count/25 + 1 if @youtube
+    vimeo = @vimeo.count/25 + 1 if @vimeo
+    dailymotion = @dailymotion.count/25 + 1 if @dailymotion
+    vine = @vine.count/10 if @vine
+    "pages[youtube]=#{youtube}&pages[vimeo]=#{vimeo}&pages[dailymotion]=#{dailymotion}&pages[vine]=#{vine}"
+  end
+
+  def increment_pages
+    pages = []
+    @params[:pages].each do |source, page_no|
+      pages << "pages[#{source}]=#{page_no.to_i + 1}"
+    end
+    pages.join("&")
   end
 
   def youtube
