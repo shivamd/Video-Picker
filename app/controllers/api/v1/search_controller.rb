@@ -5,6 +5,7 @@ module Api
 
       def videos
         if videos = VideoParser.new(params).parse
+          ActiveSupport.escape_html_entities_in_json = false
           render json: videos, status: 200, query: params[:query]
         else
           render json: { query: params[:query], error: "Couldn't find video" }, status: 404
