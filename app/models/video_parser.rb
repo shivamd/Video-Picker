@@ -28,7 +28,7 @@ class VideoParser
     @sources.each do |source|
       videos[source.to_sym] = send(source)
     end
-    videos[:pagination][:next] = pagination_url.html_safe
+    videos[:pagination][:next] = pagination_url.html_safe if videos[:pagination]
     videos
   end
 
@@ -59,52 +59,52 @@ class VideoParser
   end
 
   def calculate_pages
-    youtube = @youtube.count/25 + 1
-    vimeo = @vimeo.count/25 + 1
-    dailymotion = @dailymotion.count/25 + 1
-    vine = @vine.count/10
+    youtube = @youtube_details.count/25 + 1 if @youtube_details
+    vimeo = @vimeo_details.count/25 + 1 if @vimeo_details
+    dailymotion = @dailymotion_details.count/25 + 1 if @dailymotion_details
+    vine = @vine_details.count/10 if @vine_details
     "pages[youtube]=#{youtube}&pages[vimeo]=#{vimeo}&pages[dailymotion]=#{dailymotion}&=pages[vine]=#{vine}"
   end
 
   def youtube
     response = get_youtube_videos(@params)
     if response
-      @youtube = response.videos.map{ |video| format_youtube_response(video, @query) }.compact
+      @youtube_details = response.videos.map{ |video| format_youtube_response(video, @query) }.compact
     end
   end
 
   def vimeo
     response = get_vimeo_videos(@params)
     if response
-     @vimeo = response["videos"]["video"].map { |video| format_vimeo_response(video, @query) }.compact
+     @vimeo_details = response["videos"]["video"].map { |video| format_vimeo_response(video, @query) }.compact
     end
   end
 
   def dailymotion
     response = get_dailymotion_videos(@params)
     if response
-      @dailymotion = response["list"].map{ |video| format_dailymotion_response(video, @query) }.compact
+      @dailymotion_details = response["list"].map{ |video| format_dailymotion_response(video, @query) }.compact
     end
   end
 
   def vine
     video_links = get_popular_vine_videos(@params)
     if video_links.present?
-      @vine = video_links.map!{ |video| format_vine_response(video, @query) }.compact
+      @vine_details = video_links.map!{ |video| format_vine_response(video, @query) }.compact
     end
   end
 
   def qwiki
     response = get_qwiki_videos(@params)
     if response.present?
-      @qwiki = response.map{ |video| format_qwiki_response(video, @query) }.compact
+      @qwiki_details = response.map{ |video| format_qwiki_response(video, @query) }.compact
     end
   end
 
   def instagram
     videos = get_instagram_videos(@params)
     if videos.present?
-      @instagram = videos.map { |video| format_instagram_video(video, @query) }.compact
+      @instagram_details = videos.map { |video| format_instagram_video(video, @query) }.compact
     end
   end
 
